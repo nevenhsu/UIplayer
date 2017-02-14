@@ -8,22 +8,30 @@
 
 /* Begin PBXBuildFile section */
 		0B3666451E533BC60068C452 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B3666441E533BC60068C452 /* AppDelegate.swift */; };
-		0B3666471E533BC60068C452 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B3666461E533BC60068C452 /* ViewController.swift */; };
+		0B3666471E533BC60068C452 /* MainVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B3666461E533BC60068C452 /* MainVC.swift */; };
 		0B36664A1E533BC60068C452 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0B3666481E533BC60068C452 /* Main.storyboard */; };
 		0B36664D1E533BC70068C452 /* UIplayer.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 0B36664B1E533BC70068C452 /* UIplayer.xcdatamodeld */; };
 		0B36664F1E533BC70068C452 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0B36664E1E533BC70068C452 /* Assets.xcassets */; };
 		0B3666521E533BC70068C452 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0B3666501E533BC70068C452 /* LaunchScreen.storyboard */; };
+		0B36666B1E5351820068C452 /* Tag+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B3666671E5351820068C452 /* Tag+CoreDataClass.swift */; };
+		0B36666C1E5351820068C452 /* Tag+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B3666681E5351820068C452 /* Tag+CoreDataProperties.swift */; };
+		0B36666D1E5351820068C452 /* Item+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B3666691E5351820068C452 /* Item+CoreDataClass.swift */; };
+		0B36666E1E5351820068C452 /* Item+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B36666A1E5351820068C452 /* Item+CoreDataProperties.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		0B3666411E533BC50068C452 /* UIplayer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = UIplayer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0B3666441E533BC60068C452 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		0B3666461E533BC60068C452 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		0B3666461E533BC60068C452 /* MainVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainVC.swift; sourceTree = "<group>"; };
 		0B3666491E533BC60068C452 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		0B36664C1E533BC70068C452 /* UIplayer.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = UIplayer.xcdatamodel; sourceTree = "<group>"; };
 		0B36664E1E533BC70068C452 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		0B3666511E533BC70068C452 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		0B3666531E533BC80068C452 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		0B3666671E5351820068C452 /* Tag+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Tag+CoreDataClass.swift"; sourceTree = "<group>"; };
+		0B3666681E5351820068C452 /* Tag+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Tag+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		0B3666691E5351820068C452 /* Item+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Item+CoreDataClass.swift"; sourceTree = "<group>"; };
+		0B36666A1E5351820068C452 /* Item+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Item+CoreDataProperties.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,8 +64,9 @@
 		0B3666431E533BC60068C452 /* UIplayer */ = {
 			isa = PBXGroup;
 			children = (
+				0B36665D1E534C1F0068C452 /* Model */,
 				0B3666441E533BC60068C452 /* AppDelegate.swift */,
-				0B3666461E533BC60068C452 /* ViewController.swift */,
+				0B3666461E533BC60068C452 /* MainVC.swift */,
 				0B3666481E533BC60068C452 /* Main.storyboard */,
 				0B36664E1E533BC70068C452 /* Assets.xcassets */,
 				0B3666501E533BC70068C452 /* LaunchScreen.storyboard */,
@@ -65,6 +74,25 @@
 				0B36664B1E533BC70068C452 /* UIplayer.xcdatamodeld */,
 			);
 			path = UIplayer;
+			sourceTree = "<group>";
+		};
+		0B36665D1E534C1F0068C452 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				0B3666671E5351820068C452 /* Tag+CoreDataClass.swift */,
+				0B3666691E5351820068C452 /* Item+CoreDataClass.swift */,
+				0B36665E1E534C2F0068C452 /* Generated */,
+			);
+			name = Model;
+			sourceTree = "<group>";
+		};
+		0B36665E1E534C2F0068C452 /* Generated */ = {
+			isa = PBXGroup;
+			children = (
+				0B3666681E5351820068C452 /* Tag+CoreDataProperties.swift */,
+				0B36666A1E5351820068C452 /* Item+CoreDataProperties.swift */,
+			);
+			name = Generated;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -139,8 +167,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0B3666471E533BC60068C452 /* ViewController.swift in Sources */,
+				0B36666E1E5351820068C452 /* Item+CoreDataProperties.swift in Sources */,
+				0B36666D1E5351820068C452 /* Item+CoreDataClass.swift in Sources */,
+				0B3666471E533BC60068C452 /* MainVC.swift in Sources */,
+				0B36666C1E5351820068C452 /* Tag+CoreDataProperties.swift in Sources */,
 				0B3666451E533BC60068C452 /* AppDelegate.swift in Sources */,
+				0B36666B1E5351820068C452 /* Tag+CoreDataClass.swift in Sources */,
 				0B36664D1E533BC70068C452 /* UIplayer.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
