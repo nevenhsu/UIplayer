@@ -10,15 +10,19 @@ import UIKit
 
 class ItemCell: UITableViewCell {
 
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        // Initialization code
-    }
+    @IBOutlet weak var titleLbl: UILabel!
+    @IBOutlet weak var catagoryLbl: UILabel!
+    @IBOutlet weak var coverImg: UIImageView!
 
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
+    func updateCell(item: Item) {
+        
+        titleLbl.text = item.title
+        catagoryLbl.text = item.category
+        coverImg.image = item.cover as? UIImage
+        
     }
+    
+    
+    
 
 }

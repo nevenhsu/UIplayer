@@ -13,6 +13,14 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
     
     @IBOutlet weak var tableView: UITableView!
     var controller: NSFetchedResultsController<Item>!
+    private var _jsonPath: String = "/UIplayer/UIplayer.json"
+    
+    var jsonPath : String {
+        get {
+            return _jsonPath
+        }
+    }
+    
     
     
     override func viewDidLoad() {
@@ -43,7 +51,7 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
             return section.numberOfObjects
         }
         
-        return 0
+        return 12
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -51,7 +59,16 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        return UITableViewCell()
+        
+        let cell = tableView.dequeueReusableCell(withIdentifier: "itemCell", for: indexPath) as! ItemCell
+        configCell(cell: cell, indexPath: indexPath)
+        
+        return cell
+    }
+    
+    func configCell(cell: ItemCell , indexPath: IndexPath) {
+        let item = controller.object(at: indexPath)
+        cell.updateCell(item: item)
     }
     
     
@@ -109,6 +126,8 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
         case .update:
             if let indexPath = indexPath {
                 // Update Cell
+                let cell = tableView.cellForRow(at: indexPath) as! ItemCell
+                configCell(cell: cell, indexPath: indexPath)
             }
             
         }
@@ -122,9 +141,27 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
         item.title = "Test01"
         item.info = "Have fun"
         item.url = "http://media6000.dropshots.com/photos/1345834/20170213/095405.mov"
+        
+        let cover = "http://79.170.44.135/nevenhsu.com/UIplayer/Section_1.png"
+        DispatchQueue.global().async {
+            let url = URL(string: cover)
+            do {
+                let data =  try Data(contentsOf: url!)
+                DispatchQueue.global().sync {
+                    item.cover = UIImage(data: data)
+                }
+            } catch let error as NSError {
+                print(error.debugDescription)
+            }
+        }
+        
         item.duration = 10
         
     }
+    
+    //func downloadJson(path: String) ->  {
+        
+    //}
     
 
 }
