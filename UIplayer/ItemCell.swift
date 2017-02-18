@@ -12,13 +12,14 @@ class ItemCell: UITableViewCell {
 
     @IBOutlet weak var titleLbl: UILabel!
     @IBOutlet weak var catagoryLbl: UILabel!
-    @IBOutlet weak var coverImg: UIImageView!
+    @IBOutlet weak var thumbnail: UIImageView!
+    
 
     func updateCell(item: Item) {
         
         titleLbl.text = item.title
         catagoryLbl.text = item.category
-        coverImg.image = item.cover as? UIImage
+        thumbnail.image = item.thumbnail as? UIImage
         
     }
     

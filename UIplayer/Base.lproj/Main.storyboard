@@ -39,20 +39,20 @@
                                                     <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="App Name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="W7U-pE-AkL">
-                                                    <rect key="frame" x="28" y="90.5" width="86" height="21"/>
+                                                    <rect key="frame" x="28" y="95" width="86" height="21"/>
                                                     <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="18"/>
                                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Catagory" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oDW-DZ-9BS">
-                                                    <rect key="frame" x="28" y="72" width="47.5" height="14.5"/>
+                                                    <rect key="frame" x="28" y="76.5" width="47.5" height="14.5"/>
                                                     <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="12"/>
                                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstAttribute="bottomMargin" secondItem="W7U-pE-AkL" secondAttribute="bottom" constant="12" id="3Fx-Ud-O7f"/>
+                                                <constraint firstAttribute="bottomMargin" secondItem="W7U-pE-AkL" secondAttribute="bottom" constant="8" id="3Fx-Ud-O7f"/>
                                                 <constraint firstItem="W7U-pE-AkL" firstAttribute="leading" secondItem="uGx-cW-G5P" secondAttribute="leadingMargin" constant="20" id="4Vg-CD-tcX"/>
                                                 <constraint firstAttribute="trailing" secondItem="CFU-0b-Z5f" secondAttribute="trailing" id="CMp-vb-1ap"/>
                                                 <constraint firstItem="CFU-0b-Z5f" firstAttribute="top" secondItem="uGx-cW-G5P" secondAttribute="top" id="HPb-cf-P6X"/>
@@ -64,7 +64,7 @@
                                         </tableViewCellContentView>
                                         <connections>
                                             <outlet property="catagoryLbl" destination="oDW-DZ-9BS" id="06d-pd-pP1"/>
-                                            <outlet property="coverImg" destination="CFU-0b-Z5f" id="NM3-4q-igb"/>
+                                            <outlet property="thumbnail" destination="CFU-0b-Z5f" id="WiY-x7-uPW"/>
                                             <outlet property="titleLbl" destination="W7U-pE-AkL" id="UTF-9N-crS"/>
                                         </connections>
                                     </tableViewCell>

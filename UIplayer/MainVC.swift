@@ -13,15 +13,14 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
     
     @IBOutlet weak var tableView: UITableView!
     var controller: NSFetchedResultsController<Item>!
-    private var _jsonPath: String = "/UIplayer/UIplayer.json"
+    private var _baseURL = URL(string: "http://79.170.44.135/nevenhsu.com/")
+    private var _jsonPath: String = "UIplayer/UIplayer.json"
     
-    var jsonPath : String {
+    var jsonURL : URL {
         get {
-            return _jsonPath
+            return URL(string: _jsonPath, relativeTo: _baseURL)!
         }
     }
-    
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,7 +28,9 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
         tableView.delegate = self
         tableView.dataSource = self
         
-        generateItem()
+
+        retriveJson(url: jsonURL)
+
         fetchItem()
     }
     
@@ -124,45 +125,92 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
             }
             
         case .update:
-            if let indexPath = indexPath {
-                // Update Cell
-                let cell = tableView.cellForRow(at: indexPath) as! ItemCell
+            if let indexPath = indexPath,
+               let cell = tableView.cellForRow(at: indexPath) as? ItemCell
+            {
                 configCell(cell: cell, indexPath: indexPath)
             }
             
         }
     }
     
-    func generateItem() {
-        
-        let item = Item(context: context)
-        item.id = 1
-        item.category = "home"
-        item.title = "Test01"
-        item.info = "Have fun"
-        item.url = "http://media6000.dropshots.com/photos/1345834/20170213/095405.mov"
-        
-        let cover = "http://79.170.44.135/nevenhsu.com/UIplayer/Section_1.png"
-        DispatchQueue.global().async {
-            let url = URL(string: cover)
-            do {
-                let data =  try Data(contentsOf: url!)
-                DispatchQueue.global().sync {
-                    item.cover = UIImage(data: data)
+
+    
+    func retriveJson(url: URL) -> Void {
+        let networkOperation = NetworkOperation(url: jsonURL)
+        networkOperation.downloadJSON { (jsonDic) in
+            if let items = jsonDic["items"] as? [[String: AnyObject]] {
+                
+                let fetchRequest: NSFetchRequest<Item> = NSFetchRequest(entityName: "Item")
+
+                
+                for itemDic in items {
+                    
+                    let idPredicate = NSPredicate(format: "id == %@", itemDic["id"] as! CVarArg)
+                    fetchRequest.predicate = idPredicate
+                    
+                    do {
+                        let result = try context.fetch(fetchRequest)
+                        
+                        if let item = result.first {
+                            self.configItem(item: item, itemDic: itemDic)
+                        } else {
+                            let newItem = Item(context: context)
+                            self.configItem(item: newItem, itemDic: itemDic)
+                        }
+                        
+                    } catch let error as NSError {
+                        print(error.debugDescription)
+                    }
+                    
                 }
-            } catch let error as NSError {
-                print(error.debugDescription)
+                
             }
         }
-        
-        item.duration = 10
-        
     }
     
-    //func downloadJson(path: String) ->  {
+    func configItem(item: Item, itemDic: [String: AnyObject]) {
+        if let id = itemDic["id"] as? Int16 {
+            item.id = id
+        }
         
-    //}
-    
+        if let catagory = itemDic["category"] as? String {
+            item.category = catagory
+        }
+        
+        if let title = itemDic["title"] as? String {
+            item.title = title
+        }
+        
+        if let info = itemDic["info"] as? String {
+            item.info = info
+        }
+        
+        if let url = itemDic["url"] as? String {
+            item.url = url
+        }
+        
+        if let duration = itemDic["duration"] as? Int16 {
+            item.duration = duration
+        }
+        
+        if let thumbnail = itemDic["thumbnail"] as? String {
+            DispatchQueue.global().async {
+                let url = URL(string: thumbnail)
+                do {
+                    let data =  try Data(contentsOf: url!)
+                    item.thumbnail = UIImage(data: data)
+                    
+                    DispatchQueue.main.async {
+                        self.tableView.reloadData()
+                    }
+
+                } catch let error as NSError {
+                    print(error.debugDescription)
+                }
+            }
+        }
+    }
 
 }
 
