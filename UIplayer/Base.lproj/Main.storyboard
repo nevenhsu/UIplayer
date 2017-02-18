@@ -86,16 +86,17 @@
                     </navigationItem>
                     <connections>
                         <outlet property="tableView" destination="pcH-Dp-cAx" id="t8W-bI-ON6"/>
+                        <segue destination="cJd-Jx-SsT" kind="showDetail" identifier="DetailVC" id="FbY-va-2SO"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="920.79999999999995" y="-561.76911544227892"/>
         </scene>
-        <!--View Controller-->
+        <!--DetailVC-->
         <scene sceneID="ji5-Yk-apR">
             <objects>
-                <viewController id="cJd-Jx-SsT" sceneMemberID="viewController">
+                <viewController id="cJd-Jx-SsT" customClass="DetailVC" customModule="UIplayer" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="jmj-B3-gLO"/>
                         <viewControllerLayoutGuide type="bottom" id="8Cw-Jk-X2y"/>
@@ -139,6 +140,9 @@ professionals across industries.</string>
                                 <state key="normal" title="Done">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <connections>
+                                    <action selector="tappedDoneBtn:" destination="cJd-Jx-SsT" eventType="touchUpInside" id="zid-6L-oII"/>
+                                </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
@@ -153,10 +157,14 @@ professionals across industries.</string>
                             <constraint firstItem="1XV-Hw-jdH" firstAttribute="leading" secondItem="kMV-uy-icx" secondAttribute="leading" constant="20" id="y81-ge-0wh"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="infoLbl" destination="iYB-yX-Ckh" id="q2j-UY-ndP"/>
+                        <outlet property="titleLbl" destination="1XV-Hw-jdH" id="KKT-ia-qUe"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="diV-j9-tcz" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1645.5999999999999" y="-562.66866566716647"/>
+            <point key="canvasLocation" x="1753" y="-562"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="3fg-by-NbE">

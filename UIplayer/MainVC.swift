@@ -15,6 +15,7 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
     var controller: NSFetchedResultsController<Item>!
     private var _baseURL = URL(string: "http://79.170.44.135/nevenhsu.com/")
     private var _jsonPath: String = "UIplayer/UIplayer.json"
+    var tags = [Tag]()
     
     var jsonURL : URL {
         get {
@@ -27,14 +28,9 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
         
         tableView.delegate = self
         tableView.dataSource = self
-        
-
         retriveJson(url: jsonURL)
-
         fetchItem()
     }
-    
-    
 
     func numberOfSections(in tableView: UITableView) -> Int {
         
@@ -73,8 +69,11 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
     }
     
     
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        //TODO: set up DetailSegue
+    }
+    
     func fetchItem() {
-        
         let fetchRequest: NSFetchRequest<Item> = NSFetchRequest(entityName: "Item")
         let idSort: NSSortDescriptor = NSSortDescriptor(key: "id", ascending: true)
         fetchRequest.sortDescriptors = [idSort]
@@ -90,7 +89,6 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
         } catch let error as NSError {
             print("\(error.debugDescription)")
         }
-
     }
     
     func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
@@ -130,20 +128,14 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
             {
                 configCell(cell: cell, indexPath: indexPath)
             }
-            
         }
     }
-    
-
     
     func retriveJson(url: URL) -> Void {
         let networkOperation = NetworkOperation(url: jsonURL)
         networkOperation.downloadJSON { (jsonDic) in
             if let items = jsonDic["items"] as? [[String: AnyObject]] {
-                
                 let fetchRequest: NSFetchRequest<Item> = NSFetchRequest(entityName: "Item")
-
-                
                 for itemDic in items {
                     
                     let idPredicate = NSPredicate(format: "id == %@", itemDic["id"] as! CVarArg)
@@ -162,9 +154,7 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
                     } catch let error as NSError {
                         print(error.debugDescription)
                     }
-                    
                 }
-                
             }
         }
     }
@@ -195,22 +185,52 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
         }
         
         if let thumbnail = itemDic["thumbnail"] as? String {
-            DispatchQueue.global().async {
-                let url = URL(string: thumbnail)
-                do {
-                    let data =  try Data(contentsOf: url!)
-                    item.thumbnail = UIImage(data: data)
-                    
-                    DispatchQueue.main.async {
-                        self.tableView.reloadData()
-                    }
-
-                } catch let error as NSError {
-                    print(error.debugDescription)
-                }
+            DispatchQueue.global().async
+            {
+                let url = URL(string: thumbnail)!
+                self.configImg(item: item, itemProperty: "thumbnail", url: url)
+            }
+        }
+        
+        if let cover = itemDic["cover"] as? String {
+            DispatchQueue.global().async
+                {
+                    let url = URL(string: cover)!
+                    self.configImg(item: item, itemProperty: "cover", url: url)
+            }
+        }
+        
+        if let tags = itemDic["tags"] as? [String] {
+            for tag in tags {
+                let tagEntity = Tag(context: context)
+                tagEntity.name = tag
+                item.addToTags(tagEntity)
             }
         }
     }
-
+    
+    func configImg(item: Item,itemProperty: String, url: URL) {
+        do {
+            let data =  try Data(contentsOf: url)
+            
+            switch itemProperty {
+            case "thumbnail":
+                item.thumbnail = UIImage(data: data)
+                DispatchQueue.main.async {
+                    self.tableView.reloadData()
+                }
+            case "cover":
+                item.cover = UIImage(data: data)
+                DispatchQueue.main.async {
+                    self.tableView.reloadData()
+                }
+            default:
+                return
+            }
+        } catch let error as NSError {
+            print(error.debugDescription)
+        }
+    }
+    
 }
 

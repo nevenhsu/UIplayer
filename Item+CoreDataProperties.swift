@@ -2,7 +2,7 @@
 //  Item+CoreDataProperties.swift
 //  UIplayer
 //
-//  Created by Neven on 14/02/2017.
+//  Created by Neven Hsu on 18/02/2017.
 //  Copyright © 2017 Neven. All rights reserved.
 //
 
@@ -16,14 +16,14 @@ extension Item {
         return NSFetchRequest<Item>(entityName: "Item");
     }
 
-    @NSManaged public var id: Int16
-    @NSManaged public var title: String?
     @NSManaged public var category: String?
-    @NSManaged public var info: String?
-    @NSManaged public var url: String?
-    @NSManaged public var thumbnail: NSObject?
     @NSManaged public var cover: NSObject?
     @NSManaged public var duration: Int16
+    @NSManaged public var id: Int16
+    @NSManaged public var info: String?
+    @NSManaged public var thumbnail: NSObject?
+    @NSManaged public var title: String?
+    @NSManaged public var url: String?
     @NSManaged public var tags: NSSet?
 
 }
