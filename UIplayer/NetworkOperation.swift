@@ -24,7 +24,7 @@ class NetworkOperation {
                 switch httpResponse.statusCode {
                 case 200:
                     do {
-                        let json = try JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions())
+                        let json = try JSONSerialization.jsonObject(with: data!, options: .allowFragments)
                         completion(json as! [String : AnyObject])
                     } catch let error as NSError {
                         print(error.debugDescription)

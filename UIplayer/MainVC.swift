@@ -13,13 +13,47 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
     
     @IBOutlet weak var tableView: UITableView!
     var controller: NSFetchedResultsController<Item>!
+    private var _itemsDic: [[String: AnyObject]]!
+    private var _newIndex: Int!
     private var _baseURL = URL(string: "http://79.170.44.135/nevenhsu.com/")
     private var _jsonPath: String = "UIplayer/UIplayer.json"
-    var tags = [Tag]()
+    let firstDownloadTimes = 4
     
     var jsonURL : URL {
         get {
             return URL(string: _jsonPath, relativeTo: _baseURL)!
+        }
+    }
+    
+    var itemsDic: [[String: AnyObject]] {
+        get {
+            if _itemsDic != nil {
+                return _itemsDic
+            } else {
+                return []
+            }
+        }
+        set {
+            _itemsDic = newValue
+        }
+    }
+    
+    var newIndex: Int {
+        get {
+            if (_newIndex != nil) {
+                return _newIndex
+            } else {
+                return 0
+            }
+        }
+        set {
+            if newValue > newIndex {
+                _newIndex = newValue
+                let newItemIndex = newValue + firstDownloadTimes
+                if newItemIndex < itemsDic.count {
+                    self.createItem(itemDic: itemsDic[newItemIndex])
+                }
+            }
         }
     }
     
@@ -33,21 +67,17 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
     }
 
     func numberOfSections(in tableView: UITableView) -> Int {
-        
         if let sections = controller.sections {
             return sections.count
         }
-        
         return 0
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        
         if let sectionInfo = controller.sections {
             let section = sectionInfo[section]
             return section.numberOfObjects
         }
-        
         return 12
     }
     
@@ -56,10 +86,9 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
         let cell = tableView.dequeueReusableCell(withIdentifier: "itemCell", for: indexPath) as! ItemCell
         configCell(cell: cell, indexPath: indexPath)
-        
+        newIndex = indexPath.row
         return cell
     }
     
@@ -68,9 +97,22 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
         cell.updateCell(item: item)
     }
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if let objs = controller.fetchedObjects, objs.count > 0
+        {
+            let item = objs[indexPath.row]
+            performSegue(withIdentifier: "DetailVC", sender: item)
+        }
+    }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        //TODO: set up DetailSegue
+        if segue.identifier == "DetailVC" {
+            if let detialVC = segue.destination as? DetailVC,
+                let item = sender as? Item
+            {
+                detialVC.item = item
+            }
+        }
     }
     
     func fetchItem() {
@@ -85,7 +127,6 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
         
         do {
             try controller.performFetch()
-            
         } catch let error as NSError {
             print("\(error.debugDescription)")
         }
@@ -101,9 +142,7 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
     
     
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
-        
         switch type {
-            
         case .insert:
             if let indexPath = newIndexPath {
                 tableView.insertRows(at: [indexPath], with: .fade)
@@ -134,27 +173,36 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
     func retriveJson(url: URL) -> Void {
         let networkOperation = NetworkOperation(url: jsonURL)
         networkOperation.downloadJSON { (jsonDic) in
-            if let items = jsonDic["items"] as? [[String: AnyObject]] {
-                let fetchRequest: NSFetchRequest<Item> = NSFetchRequest(entityName: "Item")
-                for itemDic in items {
-                    
-                    let idPredicate = NSPredicate(format: "id == %@", itemDic["id"] as! CVarArg)
-                    fetchRequest.predicate = idPredicate
-                    
-                    do {
-                        let result = try context.fetch(fetchRequest)
-                        
-                        if let item = result.first {
-                            self.configItem(item: item, itemDic: itemDic)
-                        } else {
-                            let newItem = Item(context: context)
-                            self.configItem(item: newItem, itemDic: itemDic)
-                        }
-                        
-                    } catch let error as NSError {
-                        print(error.debugDescription)
-                    }
+            self._newIndex = 0
+            if let itemsDic = jsonDic["items"] as? [[String: AnyObject]] {
+                self.itemsDic = itemsDic
+                for itemDic in itemsDic.prefix(upTo: self.firstDownloadTimes)
+                {
+                    self.createItem(itemDic: itemDic)
                 }
+            }
+        }
+    }
+    
+    func createItem(itemDic: [String: AnyObject]) {
+        let fetchRequest: NSFetchRequest<Item> = NSFetchRequest(entityName: "Item")
+        if let id = itemDic["id"]
+        {
+            let idPredicate = NSPredicate(format: "id == %@", id as! CVarArg)
+            fetchRequest.predicate = idPredicate
+            
+            do {
+                let result = try context.fetch(fetchRequest)
+                
+                if let item = result.first {
+                    self.configItem(item: item, itemDic: itemDic)
+                } else {
+                    let newItem = Item(context: context)
+                    self.configItem(item: newItem, itemDic: itemDic)
+                }
+                
+            } catch let error as NSError {
+                print(error.debugDescription)
             }
         }
     }
@@ -194,17 +242,30 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
         
         if let cover = itemDic["cover"] as? String {
             DispatchQueue.global().async
-                {
-                    let url = URL(string: cover)!
-                    self.configImg(item: item, itemProperty: "cover", url: url)
+            {
+                let url = URL(string: cover)!
+                self.configImg(item: item, itemProperty: "cover", url: url)
             }
         }
         
         if let tags = itemDic["tags"] as? [String] {
+            let fetchRequest: NSFetchRequest<Tag> = NSFetchRequest(entityName: "Tag")
+            
             for tag in tags {
-                let tagEntity = Tag(context: context)
-                tagEntity.name = tag
-                item.addToTags(tagEntity)
+                let tagPredicate = NSPredicate(format: "name == %@", tag)
+                fetchRequest.predicate = tagPredicate
+                do {
+                    let result = try context.fetch(fetchRequest)
+                    if let tagEntity = result.first {
+                        item.addToTags(tagEntity)
+                    } else {
+                        let newTag = Tag(context: context)
+                        newTag.name = tag
+                        item.addToTags(newTag)
+                    }
+                } catch let err as NSError {
+                    print(err.debugDescription)
+                }
             }
         }
     }

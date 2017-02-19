@@ -11,6 +11,7 @@ import UIKit
 class DetailVC: UIViewController {
     @IBOutlet weak var titleLbl: UILabel!
     @IBOutlet weak var infoLbl: UILabel!
+    @IBOutlet weak var cover: UIImageView!
     private var _item: Item!
     
     var item: Item {
@@ -25,11 +26,24 @@ class DetailVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        titleLbl.text = item.title
-        infoLbl.text = item.info
+        if let title = item.title {
+            titleLbl.text = title
+        }
+
+        if let info = item.info {
+            infoLbl.text = info
+        }
+        
+        if let coverImg = item.cover as? UIImage {
+            cover.image = coverImg
+        }
+
     }
 
     @IBAction func tappedDoneBtn(_ sender: Any) {
         dismiss(animated: true, completion: nil)
     }
+
+
+
 }

@@ -86,7 +86,7 @@
                     </navigationItem>
                     <connections>
                         <outlet property="tableView" destination="pcH-Dp-cAx" id="t8W-bI-ON6"/>
-                        <segue destination="cJd-Jx-SsT" kind="showDetail" identifier="DetailVC" id="FbY-va-2SO"/>
+                        <segue destination="cJd-Jx-SsT" kind="presentation" identifier="DetailVC" id="FbY-va-2SO"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -105,6 +105,11 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="gOm-o6-idi">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                <gestureRecognizers/>
+                            </imageView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="play" translatesAutoresizingMaskIntoConstraints="NO" id="md5-Zz-fKq">
                                 <rect key="frame" x="155" y="301" width="64" height="64"/>
                                 <constraints>
@@ -148,23 +153,28 @@ professionals across industries.</string>
                         <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="md5-Zz-fKq" firstAttribute="centerY" secondItem="kMV-uy-icx" secondAttribute="centerY" id="26g-Lv-fzJ"/>
+                            <constraint firstItem="8Cw-Jk-X2y" firstAttribute="top" secondItem="gOm-o6-idi" secondAttribute="bottom" id="ARG-F6-bN6"/>
+                            <constraint firstItem="gOm-o6-idi" firstAttribute="leading" secondItem="kMV-uy-icx" secondAttribute="leading" id="ELc-vL-F4X"/>
                             <constraint firstItem="8Cw-Jk-X2y" firstAttribute="top" secondItem="iYB-yX-Ckh" secondAttribute="bottom" constant="24" id="Jbj-pN-RWx"/>
+                            <constraint firstItem="gOm-o6-idi" firstAttribute="top" secondItem="kMV-uy-icx" secondAttribute="top" id="KCp-Ny-LlJ"/>
                             <constraint firstAttribute="trailing" secondItem="Cpi-R0-aYZ" secondAttribute="trailing" constant="18" id="RbO-QA-81L"/>
                             <constraint firstItem="md5-Zz-fKq" firstAttribute="centerX" secondItem="kMV-uy-icx" secondAttribute="centerX" id="W96-tv-X7Q"/>
                             <constraint firstItem="iYB-yX-Ckh" firstAttribute="leading" secondItem="kMV-uy-icx" secondAttribute="leading" constant="20" id="bOe-5h-JZj"/>
                             <constraint firstItem="Cpi-R0-aYZ" firstAttribute="top" secondItem="jmj-B3-gLO" secondAttribute="bottom" constant="12" id="dbs-qo-eVX"/>
                             <constraint firstItem="iYB-yX-Ckh" firstAttribute="top" secondItem="1XV-Hw-jdH" secondAttribute="bottom" constant="8" id="jRr-wh-1ed"/>
+                            <constraint firstAttribute="trailing" secondItem="gOm-o6-idi" secondAttribute="trailing" id="sgF-Je-dpn"/>
                             <constraint firstItem="1XV-Hw-jdH" firstAttribute="leading" secondItem="kMV-uy-icx" secondAttribute="leading" constant="20" id="y81-ge-0wh"/>
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="cover" destination="gOm-o6-idi" id="wtb-Ve-am8"/>
                         <outlet property="infoLbl" destination="iYB-yX-Ckh" id="q2j-UY-ndP"/>
                         <outlet property="titleLbl" destination="1XV-Hw-jdH" id="KKT-ia-qUe"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="diV-j9-tcz" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1753" y="-562"/>
+            <point key="canvasLocation" x="1752.8" y="-562.66866566716647"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="3fg-by-NbE">
