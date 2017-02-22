@@ -91,7 +91,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="920.79999999999995" y="-561.76911544227892"/>
+            <point key="canvasLocation" x="929" y="-562"/>
         </scene>
         <!--DetailVC-->
         <scene sceneID="ji5-Yk-apR">
@@ -109,13 +109,6 @@
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                 <gestureRecognizers/>
-                            </imageView>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="play" translatesAutoresizingMaskIntoConstraints="NO" id="md5-Zz-fKq">
-                                <rect key="frame" x="155" y="301" width="64" height="64"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="64" id="7pR-BZ-7l6"/>
-                                    <constraint firstAttribute="height" constant="64" id="ukG-BF-Pl3"/>
-                                </constraints>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iYB-yX-Ckh">
                                 <rect key="frame" x="20" y="600.5" width="220" height="42.5"/>
@@ -149,18 +142,29 @@ professionals across industries.</string>
                                     <action selector="tappedDoneBtn:" destination="cJd-Jx-SsT" eventType="touchUpInside" id="zid-6L-oII"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="O22-l5-cBb">
+                                <rect key="frame" x="155.5" y="301.5" width="64" height="64"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="64" id="bvo-v3-rvz"/>
+                                    <constraint firstAttribute="height" constant="64" id="udd-bh-2Ka"/>
+                                </constraints>
+                                <state key="normal" image="play"/>
+                                <connections>
+                                    <action selector="playVideoBtn:" destination="cJd-Jx-SsT" eventType="touchUpInside" id="PXI-K9-FCJ"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="md5-Zz-fKq" firstAttribute="centerY" secondItem="kMV-uy-icx" secondAttribute="centerY" id="26g-Lv-fzJ"/>
                             <constraint firstItem="8Cw-Jk-X2y" firstAttribute="top" secondItem="gOm-o6-idi" secondAttribute="bottom" id="ARG-F6-bN6"/>
                             <constraint firstItem="gOm-o6-idi" firstAttribute="leading" secondItem="kMV-uy-icx" secondAttribute="leading" id="ELc-vL-F4X"/>
                             <constraint firstItem="8Cw-Jk-X2y" firstAttribute="top" secondItem="iYB-yX-Ckh" secondAttribute="bottom" constant="24" id="Jbj-pN-RWx"/>
                             <constraint firstItem="gOm-o6-idi" firstAttribute="top" secondItem="kMV-uy-icx" secondAttribute="top" id="KCp-Ny-LlJ"/>
+                            <constraint firstItem="O22-l5-cBb" firstAttribute="centerY" secondItem="kMV-uy-icx" secondAttribute="centerY" id="Q9E-MD-eyJ"/>
                             <constraint firstAttribute="trailing" secondItem="Cpi-R0-aYZ" secondAttribute="trailing" constant="18" id="RbO-QA-81L"/>
-                            <constraint firstItem="md5-Zz-fKq" firstAttribute="centerX" secondItem="kMV-uy-icx" secondAttribute="centerX" id="W96-tv-X7Q"/>
                             <constraint firstItem="iYB-yX-Ckh" firstAttribute="leading" secondItem="kMV-uy-icx" secondAttribute="leading" constant="20" id="bOe-5h-JZj"/>
                             <constraint firstItem="Cpi-R0-aYZ" firstAttribute="top" secondItem="jmj-B3-gLO" secondAttribute="bottom" constant="12" id="dbs-qo-eVX"/>
+                            <constraint firstItem="O22-l5-cBb" firstAttribute="centerX" secondItem="kMV-uy-icx" secondAttribute="centerX" id="euU-h2-IfF"/>
                             <constraint firstItem="iYB-yX-Ckh" firstAttribute="top" secondItem="1XV-Hw-jdH" secondAttribute="bottom" constant="8" id="jRr-wh-1ed"/>
                             <constraint firstAttribute="trailing" secondItem="gOm-o6-idi" secondAttribute="trailing" id="sgF-Je-dpn"/>
                             <constraint firstItem="1XV-Hw-jdH" firstAttribute="leading" secondItem="kMV-uy-icx" secondAttribute="leading" constant="20" id="y81-ge-0wh"/>
@@ -174,7 +178,7 @@ professionals across industries.</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="diV-j9-tcz" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1752.8" y="-562.66866566716647"/>
+            <point key="canvasLocation" x="1719" y="-561"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="3fg-by-NbE">

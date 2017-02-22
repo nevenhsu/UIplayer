@@ -7,12 +7,16 @@
 //
 
 import UIKit
+import AVKit
+import AVFoundation
 
-class DetailVC: UIViewController {
+class DetailVC: UIViewController,AVPlayerViewControllerDelegate {
     @IBOutlet weak var titleLbl: UILabel!
     @IBOutlet weak var infoLbl: UILabel!
     @IBOutlet weak var cover: UIImageView!
     private var _item: Item!
+    var playerVC: AVPlayerViewController!
+    var player: AVPlayer?
     
     var item: Item {
         get {
@@ -25,6 +29,13 @@ class DetailVC: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        playerVC = AVPlayerViewController()
+        playerVC.delegate = self
+        
+        if let url = item.url {
+            let videoUrl = URL(string: url)
+            player = AVPlayer(url: videoUrl!)
+        }
 
         if let title = item.title {
             titleLbl.text = title
@@ -38,6 +49,18 @@ class DetailVC: UIViewController {
             cover.image = coverImg
         }
 
+    }
+    
+    @IBAction func playVideoBtn(_ sender: Any) {
+        playerVC.player = player
+        self.present(playerVC, animated: true) { 
+            self.player?.play()
+        }
+        
+        NotificationCenter.default.addObserver(forName: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: player?.currentItem, queue: nil) { (notification) in
+            self.player?.seek(to: kCMTimeZero)
+            self.player?.play()
+        }
     }
 
     @IBAction func tappedDoneBtn(_ sender: Any) {
