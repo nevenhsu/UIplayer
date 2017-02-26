@@ -9,10 +9,13 @@
 import UIKit
 import CoreData
 
-class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetchedResultsControllerDelegate {
+class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetchedResultsControllerDelegate, UISearchBarDelegate, UISearchControllerDelegate  {
     
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet var searchBtnItem: UIBarButtonItem!
     var controller: NSFetchedResultsController<Item>!
+    var searchController: UISearchController!
+    //var searchBar: UISearchBar!
     private var _itemsDic: [[String: AnyObject]]!
     private var _newIndex: Int!
     private var _baseURL = URL(string: "http://79.170.44.135/nevenhsu.com/")
@@ -59,11 +62,10 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         tableView.delegate = self
         tableView.dataSource = self
         retriveJson(url: jsonURL)
-        fetchItem()
+        fetchItem(predicate: nil)
     }
 
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -78,7 +80,7 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
             let section = sectionInfo[section]
             return section.numberOfObjects
         }
-        return 12
+        return 0
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -115,15 +117,22 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
         }
     }
     
-    func fetchItem() {
+    func fetchItem(predicate: NSPredicate?) {
         let fetchRequest: NSFetchRequest<Item> = NSFetchRequest(entityName: "Item")
         let idSort: NSSortDescriptor = NSSortDescriptor(key: "id", ascending: true)
         fetchRequest.sortDescriptors = [idSort]
         
-        let controller = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: context, sectionNameKeyPath: nil, cacheName: nil)
+        if let predicate = predicate {
+            fetchRequest.predicate = predicate
+        } else {
+            fetchRequest.predicate = nil
+        }
         
+        let controller = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: context, sectionNameKeyPath: nil, cacheName: nil)
         controller.delegate = self
         self.controller = controller
+        
+        self._newIndex = 0
         
         do {
             try controller.performFetch()
@@ -140,20 +149,19 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
         tableView.endUpdates()
     }
     
-    
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
         switch type {
-        case .insert:
+        case.insert:
             if let indexPath = newIndexPath {
                 tableView.insertRows(at: [indexPath], with: .fade)
             }
             
-        case .delete:
+        case.delete:
             if let indexPath = indexPath {
                 tableView.deleteRows(at: [indexPath], with: .fade)
             }
             
-        case .move:
+        case.move:
             if let indexPath = indexPath {
                 tableView.deleteRows(at: [indexPath], with: .fade)
             }
@@ -161,7 +169,7 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
                 tableView.insertRows(at: [indexPath], with: .fade)
             }
             
-        case .update:
+        case.update:
             if let indexPath = indexPath,
                let cell = tableView.cellForRow(at: indexPath) as? ItemCell
             {
@@ -173,7 +181,6 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
     func retriveJson(url: URL) -> Void {
         let networkOperation = NetworkOperation(url: jsonURL)
         networkOperation.downloadJSON { (jsonDic) in
-            self._newIndex = 0
             if let itemsDic = jsonDic["items"] as? [[String: AnyObject]] {
                 self.itemsDic = itemsDic
                 for itemDic in itemsDic.prefix(upTo: self.firstDownloadTimes)
@@ -274,24 +281,60 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
         do {
             let data =  try Data(contentsOf: url)
             
-            switch itemProperty {
-            case "thumbnail":
-                item.thumbnail = UIImage(data: data)
-                DispatchQueue.main.async {
-                    self.tableView.reloadData()
+            DispatchQueue.main.async {
+                switch itemProperty {
+                case "thumbnail":
+                    item.thumbnail = UIImage(data: data)
+                case "cover":
+                    item.cover = UIImage(data: data)
+                default:
+                    return
                 }
-            case "cover":
-                item.cover = UIImage(data: data)
-                DispatchQueue.main.async {
-                    self.tableView.reloadData()
-                }
-            default:
-                return
+                
+                self.tableView.reloadData()
             }
         } catch let error as NSError {
             print(error.debugDescription)
         }
     }
     
+    @IBAction func tappedSearchBtn(_ sender: UIBarButtonItem) {
+        searchController = UISearchController(searchResultsController: nil)
+        searchController.delegate = self
+        searchController.searchBar.delegate = self
+        navigationItem.titleView = searchController.searchBar
+        navigationItem.rightBarButtonItem = nil
+        searchController.hidesNavigationBarDuringPresentation = false
+        searchController.dimsBackgroundDuringPresentation = false
+        searchController.searchBar.sizeToFit()
+        
+    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        navigationItem.titleView = nil
+        navigationItem.rightBarButtonItem = searchBtnItem
+        fetchItem(predicate: nil)
+        tableView.reloadData()
+    }
+    
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        //TODO: add list tableview
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        if searchText.characters.count > 0 {
+            for itemDic in itemsDic {
+                if let title = itemDic["title"] as? String, title.range(of:searchText) != nil {
+                    self.createItem(itemDic: itemDic)
+                }
+                if let catagory = itemDic["category"] as? String, catagory.range(of:searchText) != nil {
+                    self.createItem(itemDic: itemDic)
+                }
+            }
+            let predicate = NSPredicate(format: "(title contains [cd] %@) || (category contains[cd] %@)", searchText, searchText)
+            fetchItem(predicate: predicate)
+            tableView.reloadData()
+        }
+    }
 }
 

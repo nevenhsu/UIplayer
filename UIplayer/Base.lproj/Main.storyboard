@@ -82,14 +82,27 @@
                     <navigationItem key="navigationItem" title="UI player" id="YbA-dK-GrA">
                         <barButtonItem key="rightBarButtonItem" systemItem="search" id="UJA-q9-RM1">
                             <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                            <connections>
+                                <action selector="tappedSearchBtn:" destination="BYZ-38-t0r" id="sdc-Qa-FX9"/>
+                            </connections>
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="searchBtnItem" destination="UJA-q9-RM1" id="umN-rV-eHa"/>
+                        <outlet property="searchDisplayController" destination="3De-9e-BEY" id="7r8-Na-8ry"/>
                         <outlet property="tableView" destination="pcH-Dp-cAx" id="t8W-bI-ON6"/>
                         <segue destination="cJd-Jx-SsT" kind="presentation" identifier="DetailVC" id="FbY-va-2SO"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+                <searchDisplayController id="3De-9e-BEY">
+                    <connections>
+                        <outlet property="delegate" destination="BYZ-38-t0r" id="nja-ee-E3S"/>
+                        <outlet property="searchContentsController" destination="BYZ-38-t0r" id="uIp-OI-cB7"/>
+                        <outlet property="searchResultsDataSource" destination="BYZ-38-t0r" id="dnJ-1B-YBt"/>
+                        <outlet property="searchResultsDelegate" destination="BYZ-38-t0r" id="2qY-Xu-fOb"/>
+                    </connections>
+                </searchDisplayController>
             </objects>
             <point key="canvasLocation" x="929" y="-562"/>
         </scene>
@@ -183,7 +196,7 @@ professionals across industries.</string>
         <!--Navigation Controller-->
         <scene sceneID="3fg-by-NbE">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="pGj-OP-GSD" sceneMemberID="viewController">
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" hidesBarsOnSwipe="YES" id="pGj-OP-GSD" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="3nw-Sn-lNT">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
