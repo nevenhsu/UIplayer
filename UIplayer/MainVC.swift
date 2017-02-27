@@ -9,13 +9,13 @@
 import UIKit
 import CoreData
 
-class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetchedResultsControllerDelegate, UISearchBarDelegate, UISearchControllerDelegate  {
+class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetchedResultsControllerDelegate, UISearchBarDelegate, UISearchControllerDelegate, ListTableViewControllerDelegate  {
     
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet var searchBtnItem: UIBarButtonItem!
     var controller: NSFetchedResultsController<Item>!
     var searchController: UISearchController!
-    //var searchBar: UISearchBar!
+    var listTableVC: ListTableVC!
     private var _itemsDic: [[String: AnyObject]]!
     private var _newIndex: Int!
     private var _baseURL = URL(string: "http://79.170.44.135/nevenhsu.com/")
@@ -215,7 +215,7 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
     }
     
     func configItem(item: Item, itemDic: [String: AnyObject]) {
-        if let id = itemDic["id"] as? Int16 {
+        if let id = itemDic["id"] as? Int16{
             item.id = id
         }
         
@@ -299,6 +299,7 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
     }
     
     @IBAction func tappedSearchBtn(_ sender: UIBarButtonItem) {
+        // Instantiate SearchController ans SearchBar
         searchController = UISearchController(searchResultsController: nil)
         searchController.delegate = self
         searchController.searchBar.delegate = self
@@ -308,9 +309,19 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
         searchController.dimsBackgroundDuringPresentation = false
         searchController.searchBar.sizeToFit()
         
+        //Add ListTableView
+        listTableVC = ListTableVC()
+        tableView.addSubview(listTableVC.tableView)
+        listTableVC.didMove(toParentViewController: self)
+        listTableVC.delegate = self
+    }
+    
+    func didSelectListRow(listString: String) {
+        searchController.searchBar.text = listString
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        //Restore Search BarItem and ReFetch Item
         navigationItem.titleView = nil
         navigationItem.rightBarButtonItem = searchBtnItem
         fetchItem(predicate: nil)
@@ -318,10 +329,12 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
     }
     
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
-        //TODO: add list tableview
+        searchBar.showsCancelButton = true
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        //Create Item which Title and Catagory include SearchText
+        //Change Predicate and ReFetch Item
         if searchText.characters.count > 0 {
             for itemDic in itemsDic {
                 if let title = itemDic["title"] as? String, title.range(of:searchText) != nil {
