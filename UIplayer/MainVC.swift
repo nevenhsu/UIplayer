@@ -15,6 +15,7 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
     @IBOutlet var searchBtnItem: UIBarButtonItem!
     var controller: NSFetchedResultsController<Item>!
     var searchController: UISearchController!
+    var mainStoryboard:UIStoryboard!
     var listTableVC: ListTableVC!
     private var _itemsDic: [[String: AnyObject]]!
     private var _newIndex: Int!
@@ -54,7 +55,7 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
                 _newIndex = newValue
                 let newItemIndex = newValue + firstDownloadTimes
                 if newItemIndex < itemsDic.count {
-                    self.createItem(itemDic: itemsDic[newItemIndex])
+                    self.createItem(itemDic: itemsDic[newItemIndex],reCreate: true)
                 }
             }
         }
@@ -181,17 +182,18 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
     func retriveJson(url: URL) -> Void {
         let networkOperation = NetworkOperation(url: jsonURL)
         networkOperation.downloadJSON { (jsonDic) in
-            if let itemsDic = jsonDic["items"] as? [[String: AnyObject]] {
+            if let itemsDic = jsonDic["items"] as? [[String: AnyObject]]
+            {
                 self.itemsDic = itemsDic
                 for itemDic in itemsDic.prefix(upTo: self.firstDownloadTimes)
                 {
-                    self.createItem(itemDic: itemDic)
+                    self.createItem(itemDic: itemDic, reCreate: true)
                 }
             }
         }
     }
     
-    func createItem(itemDic: [String: AnyObject]) {
+    func createItem(itemDic: [String: AnyObject], reCreate: Bool) {
         let fetchRequest: NSFetchRequest<Item> = NSFetchRequest(entityName: "Item")
         if let id = itemDic["id"]
         {
@@ -200,14 +202,16 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
             
             do {
                 let result = try context.fetch(fetchRequest)
-                
-                if let item = result.first {
-                    self.configItem(item: item, itemDic: itemDic)
+                if let item = result.first
+                {
+                    if reCreate
+                    {
+                       self.configItem(item: item, itemDic: itemDic)
+                    }
                 } else {
                     let newItem = Item(context: context)
                     self.configItem(item: newItem, itemDic: itemDic)
                 }
-                
             } catch let error as NSError {
                 print(error.debugDescription)
             }
@@ -281,7 +285,8 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
         do {
             let data =  try Data(contentsOf: url)
             
-            DispatchQueue.main.async {
+            DispatchQueue.main.async
+                {
                 switch itemProperty {
                 case "thumbnail":
                     item.thumbnail = UIImage(data: data)
@@ -290,7 +295,6 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
                 default:
                     return
                 }
-                
                 self.tableView.reloadData()
             }
         } catch let error as NSError {
@@ -299,7 +303,7 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
     }
     
     @IBAction func tappedSearchBtn(_ sender: UIBarButtonItem) {
-        // Instantiate SearchController ans SearchBar
+        // Instantiate SearchController and SearchBar
         searchController = UISearchController(searchResultsController: nil)
         searchController.delegate = self
         searchController.searchBar.delegate = self
@@ -309,15 +313,18 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
         searchController.dimsBackgroundDuringPresentation = false
         searchController.searchBar.sizeToFit()
         
-        //Add ListTableView
-        listTableVC = ListTableVC()
-        tableView.addSubview(listTableVC.tableView)
-        listTableVC.didMove(toParentViewController: self)
+        //Instantiate ListTableView
+        mainStoryboard = UIStoryboard(name: "Main", bundle: nil)
+        listTableVC = mainStoryboard.instantiateViewController(withIdentifier: "ListTableVC") as? ListTableVC
         listTableVC.delegate = self
+        listTableVC.tableView.sizeToFit()
+        addViewController(viewController: listTableVC)
     }
     
     func didSelectListRow(listString: String) {
-        searchController.searchBar.text = listString
+        let searchBar = searchController.searchBar
+        searchBar.text = listString
+        searchBar.delegate?.searchBar!(searchBar, textDidChange: listString)
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
@@ -326,6 +333,7 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
         navigationItem.rightBarButtonItem = searchBtnItem
         fetchItem(predicate: nil)
         tableView.reloadData()
+        removeViewController(viewController: listTableVC)
     }
     
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
@@ -336,18 +344,36 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
         //Create Item which Title and Catagory include SearchText
         //Change Predicate and ReFetch Item
         if searchText.characters.count > 0 {
+            removeViewController(viewController: listTableVC)
+            
             for itemDic in itemsDic {
-                if let title = itemDic["title"] as? String, title.range(of:searchText) != nil {
-                    self.createItem(itemDic: itemDic)
+                if let title = itemDic["title"] as? String, title.range(of:searchText, options: .caseInsensitive) != nil
+                {
+                    self.createItem(itemDic: itemDic,reCreate: false)
                 }
-                if let catagory = itemDic["category"] as? String, catagory.range(of:searchText) != nil {
-                    self.createItem(itemDic: itemDic)
+                if let catagory = itemDic["category"] as? String, catagory.range(of:searchText, options: .caseInsensitive) != nil
+                {
+                    self.createItem(itemDic: itemDic,reCreate: false)
                 }
             }
             let predicate = NSPredicate(format: "(title contains [cd] %@) || (category contains[cd] %@)", searchText, searchText)
             fetchItem(predicate: predicate)
             tableView.reloadData()
+        } else {
+            addViewController(viewController: listTableVC)
         }
     }
+    
+    func addViewController(viewController: UIViewController) {
+        listTableVC.willMove(toParentViewController: self)
+        tableView.addSubview(listTableVC.tableView)
+        listTableVC.didMove(toParentViewController: self)
+    }
+    
+    func removeViewController(viewController: UIViewController) {
+        tableView.willRemoveSubview(viewController.view)
+        viewController.view.removeFromSuperview()
+    }
+    
 }
 

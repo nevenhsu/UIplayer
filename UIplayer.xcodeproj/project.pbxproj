@@ -21,6 +21,7 @@
 		0BAB7D6E1E584C4800B2B798 /* Tag+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BAB7D6A1E584C4800B2B798 /* Tag+CoreDataClass.swift */; };
 		0BAB7D6F1E584C4800B2B798 /* Tag+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BAB7D6B1E584C4800B2B798 /* Tag+CoreDataProperties.swift */; };
 		0BAB7D711E58507C00B2B798 /* DetailVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BAB7D701E58507C00B2B798 /* DetailVC.swift */; };
+		0BB5B9401E64570B00661D89 /* ListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB5B93F1E64570B00661D89 /* ListCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -40,6 +41,7 @@
 		0BAB7D6A1E584C4800B2B798 /* Tag+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Tag+CoreDataClass.swift"; path = "../Tag+CoreDataClass.swift"; sourceTree = "<group>"; };
 		0BAB7D6B1E584C4800B2B798 /* Tag+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Tag+CoreDataProperties.swift"; path = "../Tag+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		0BAB7D701E58507C00B2B798 /* DetailVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailVC.swift; sourceTree = "<group>"; };
+		0BB5B93F1E64570B00661D89 /* ListCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -109,6 +111,7 @@
 			isa = PBXGroup;
 			children = (
 				0B38987F1E55F3D300C3459F /* ItemCell.swift */,
+				0BB5B93F1E64570B00661D89 /* ListCell.swift */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -204,6 +207,7 @@
 				0B3666451E533BC60068C452 /* AppDelegate.swift in Sources */,
 				0B13A0161E5761BC00CA9498 /* NetworkOperation.swift in Sources */,
 				0B36664D1E533BC70068C452 /* UIplayer.xcdatamodeld in Sources */,
+				0BB5B9401E64570B00661D89 /* ListCell.swift in Sources */,
 				0BAB7D6F1E584C4800B2B798 /* Tag+CoreDataProperties.swift in Sources */,
 				0BAB7D711E58507C00B2B798 /* DetailVC.swift in Sources */,
 			);
