@@ -22,7 +22,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="132" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="pcH-Dp-cAx">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="132" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="pcH-Dp-cAx" customClass="MainVCBackground" customModule="UIplayer" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <color key="sectionIndexBackgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -39,13 +39,13 @@
                                                     <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="App Name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="W7U-pE-AkL">
-                                                    <rect key="frame" x="28" y="95" width="86" height="21"/>
+                                                    <rect key="frame" x="24" y="95" width="86" height="21"/>
                                                     <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="18"/>
                                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Catagory" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oDW-DZ-9BS">
-                                                    <rect key="frame" x="28" y="76.5" width="47.5" height="14.5"/>
+                                                    <rect key="frame" x="24" y="76.5" width="47.5" height="14.5"/>
                                                     <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="12"/>
                                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
@@ -53,7 +53,7 @@
                                             </subviews>
                                             <constraints>
                                                 <constraint firstAttribute="bottomMargin" secondItem="W7U-pE-AkL" secondAttribute="bottom" constant="8" id="3Fx-Ud-O7f"/>
-                                                <constraint firstItem="W7U-pE-AkL" firstAttribute="leading" secondItem="uGx-cW-G5P" secondAttribute="leadingMargin" constant="20" id="4Vg-CD-tcX"/>
+                                                <constraint firstItem="W7U-pE-AkL" firstAttribute="leading" secondItem="uGx-cW-G5P" secondAttribute="leadingMargin" constant="16" id="4Vg-CD-tcX"/>
                                                 <constraint firstAttribute="trailing" secondItem="CFU-0b-Z5f" secondAttribute="trailing" id="CMp-vb-1ap"/>
                                                 <constraint firstItem="CFU-0b-Z5f" firstAttribute="top" secondItem="uGx-cW-G5P" secondAttribute="top" id="HPb-cf-P6X"/>
                                                 <constraint firstItem="W7U-pE-AkL" firstAttribute="top" secondItem="oDW-DZ-9BS" secondAttribute="bottom" constant="4" id="IHa-qa-g7Z"/>
@@ -81,7 +81,7 @@
                     </view>
                     <navigationItem key="navigationItem" title="UI player" id="YbA-dK-GrA">
                         <barButtonItem key="rightBarButtonItem" systemItem="search" id="UJA-q9-RM1">
-                            <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                            <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <connections>
                                 <action selector="tappedSearchBtn:" destination="BYZ-38-t0r" id="sdc-Qa-FX9"/>
                             </connections>
@@ -104,7 +104,7 @@
                     </connections>
                 </searchDisplayController>
             </objects>
-            <point key="canvasLocation" x="929" y="-562"/>
+            <point key="canvasLocation" x="914" y="-561"/>
         </scene>
         <!--DetailVC-->
         <scene sceneID="ji5-Yk-apR">
@@ -124,7 +124,7 @@
                                 <gestureRecognizers/>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iYB-yX-Ckh">
-                                <rect key="frame" x="20" y="600.5" width="220" height="42.5"/>
+                                <rect key="frame" x="16" y="592.5" width="220" height="42.5"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="220" id="nhV-hb-GGp"/>
                                 </constraints>
@@ -136,19 +136,18 @@ professionals across industries.</string>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="App Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1XV-Hw-jdH">
-                                <rect key="frame" x="20" y="571.5" width="86" height="21"/>
+                                <rect key="frame" x="16" y="563.5" width="86" height="21"/>
                                 <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="18"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Cpi-R0-aYZ">
-                                <rect key="frame" x="289" y="32" width="68" height="28"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Cpi-R0-aYZ">
+                                <rect key="frame" x="16" y="28" width="71" height="31"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="68" id="uZN-O7-pf5"/>
-                                    <constraint firstAttribute="height" constant="28" id="xpB-6O-t1b"/>
+                                    <constraint firstAttribute="width" constant="71" id="uZN-O7-pf5"/>
+                                    <constraint firstAttribute="height" constant="31" id="xpB-6O-t1b"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="12"/>
-                                <state key="normal" title="Done">
+                                <state key="normal" image="done">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
@@ -166,21 +165,34 @@ professionals across industries.</string>
                                     <action selector="playVideoBtn:" destination="cJd-Jx-SsT" eventType="touchUpInside" id="PXI-K9-FCJ"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3hR-GQ-Fz5">
+                                <rect key="frame" x="335" y="611" width="24" height="24"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="24" id="3eV-tt-B2N"/>
+                                    <constraint firstAttribute="width" constant="24" id="GTe-ty-Apv"/>
+                                </constraints>
+                                <state key="normal" image="share"/>
+                                <connections>
+                                    <action selector="tappedShareBtn:" destination="cJd-Jx-SsT" eventType="touchUpInside" id="7mT-Fa-8ub"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="8Cw-Jk-X2y" firstAttribute="top" secondItem="gOm-o6-idi" secondAttribute="bottom" id="ARG-F6-bN6"/>
                             <constraint firstItem="gOm-o6-idi" firstAttribute="leading" secondItem="kMV-uy-icx" secondAttribute="leading" id="ELc-vL-F4X"/>
-                            <constraint firstItem="8Cw-Jk-X2y" firstAttribute="top" secondItem="iYB-yX-Ckh" secondAttribute="bottom" constant="24" id="Jbj-pN-RWx"/>
+                            <constraint firstItem="8Cw-Jk-X2y" firstAttribute="top" secondItem="iYB-yX-Ckh" secondAttribute="bottom" constant="32" id="Jbj-pN-RWx"/>
                             <constraint firstItem="gOm-o6-idi" firstAttribute="top" secondItem="kMV-uy-icx" secondAttribute="top" id="KCp-Ny-LlJ"/>
+                            <constraint firstAttribute="trailing" secondItem="3hR-GQ-Fz5" secondAttribute="trailing" constant="16" id="KVp-61-VAC"/>
+                            <constraint firstItem="Cpi-R0-aYZ" firstAttribute="leading" secondItem="kMV-uy-icx" secondAttribute="leading" constant="16" id="Nrd-Uv-S8g"/>
                             <constraint firstItem="O22-l5-cBb" firstAttribute="centerY" secondItem="kMV-uy-icx" secondAttribute="centerY" id="Q9E-MD-eyJ"/>
-                            <constraint firstAttribute="trailing" secondItem="Cpi-R0-aYZ" secondAttribute="trailing" constant="18" id="RbO-QA-81L"/>
-                            <constraint firstItem="iYB-yX-Ckh" firstAttribute="leading" secondItem="kMV-uy-icx" secondAttribute="leading" constant="20" id="bOe-5h-JZj"/>
-                            <constraint firstItem="Cpi-R0-aYZ" firstAttribute="top" secondItem="jmj-B3-gLO" secondAttribute="bottom" constant="12" id="dbs-qo-eVX"/>
+                            <constraint firstItem="1XV-Hw-jdH" firstAttribute="leading" secondItem="iYB-yX-Ckh" secondAttribute="leading" id="TO8-gx-C9B"/>
+                            <constraint firstItem="iYB-yX-Ckh" firstAttribute="leading" secondItem="kMV-uy-icx" secondAttribute="leading" constant="16" id="bOe-5h-JZj"/>
+                            <constraint firstItem="Cpi-R0-aYZ" firstAttribute="top" secondItem="jmj-B3-gLO" secondAttribute="bottom" constant="8" id="dbs-qo-eVX"/>
                             <constraint firstItem="O22-l5-cBb" firstAttribute="centerX" secondItem="kMV-uy-icx" secondAttribute="centerX" id="euU-h2-IfF"/>
                             <constraint firstItem="iYB-yX-Ckh" firstAttribute="top" secondItem="1XV-Hw-jdH" secondAttribute="bottom" constant="8" id="jRr-wh-1ed"/>
+                            <constraint firstItem="8Cw-Jk-X2y" firstAttribute="top" secondItem="3hR-GQ-Fz5" secondAttribute="bottom" constant="32" id="rKK-Gs-qg7"/>
                             <constraint firstAttribute="trailing" secondItem="gOm-o6-idi" secondAttribute="trailing" id="sgF-Je-dpn"/>
-                            <constraint firstItem="1XV-Hw-jdH" firstAttribute="leading" secondItem="kMV-uy-icx" secondAttribute="leading" constant="20" id="y81-ge-0wh"/>
                         </constraints>
                     </view>
                     <connections>
@@ -196,9 +208,8 @@ professionals across industries.</string>
         <!--List TableVC-->
         <scene sceneID="i4a-Sb-hp6">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="yNM-2S-Wd6" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <tableViewController storyboardIdentifier="ListTableVC" id="LwI-3N-8ln" customClass="ListTableVC" customModule="UIplayer" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="dFx-ln-Hem">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="dFx-ln-Hem" customClass="ListTableViewBackground" customModule="UIplayer" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -214,14 +225,14 @@ professionals across industries.</string>
                                         <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="3bK-PI-cYy">
                                             <rect key="frame" x="15" y="0.0" width="345" height="44"/>
                                             <autoresizingMask key="autoresizingMask"/>
-                                            <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="18"/>
-                                            <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                            <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="18"/>
+                                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                     </subviews>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 </tableViewCellContentView>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             </tableViewCell>
                         </prototypes>
                         <connections>
@@ -233,18 +244,24 @@ professionals across industries.</string>
                     <nil key="simulatedTopBarMetrics"/>
                     <nil key="simulatedBottomBarMetrics"/>
                 </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="yNM-2S-Wd6" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2498" y="-563"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="3fg-by-NbE">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" hidesBarsOnSwipe="YES" id="pGj-OP-GSD" sceneMemberID="viewController">
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="pGj-OP-GSD" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="3nw-Sn-lNT">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" barStyle="black" id="3nw-Sn-lNT">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
-                        <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                        <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="barTintColor" red="0.22745098039215686" green="0.66666666669999997" blue="0.82352941180000006" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <textAttributes key="titleTextAttributes">
+                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        </textAttributes>
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>
@@ -257,7 +274,9 @@ professionals across industries.</string>
         </scene>
     </scenes>
     <resources>
+        <image name="done" width="71" height="31"/>
         <image name="placeholder" width="375" height="134"/>
         <image name="play" width="60" height="60"/>
+        <image name="share" width="16" height="22"/>
     </resources>
 </document>

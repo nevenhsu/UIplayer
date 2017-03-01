@@ -14,7 +14,7 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet var searchBtnItem: UIBarButtonItem!
     var controller: NSFetchedResultsController<Item>!
-    var searchController: UISearchController!
+    var searchController: SearchController!
     var mainStoryboard:UIStoryboard!
     var listTableVC: ListTableVC!
     private var _itemsDic: [[String: AnyObject]]!
@@ -22,7 +22,7 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
     private var _baseURL = URL(string: "http://79.170.44.135/nevenhsu.com/")
     private var _jsonPath: String = "UIplayer/UIplayer.json"
     let firstDownloadTimes = 4
-    
+
     var jsonURL : URL {
         get {
             return URL(string: _jsonPath, relativeTo: _baseURL)!
@@ -304,10 +304,10 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
     
     @IBAction func tappedSearchBtn(_ sender: UIBarButtonItem) {
         // Instantiate SearchController and SearchBar
-        searchController = UISearchController(searchResultsController: nil)
+        searchController = SearchController(searchResultsController: self, frame: (navigationController?.navigationBar.frame)!)
         searchController.delegate = self
-        searchController.searchBar.delegate = self
-        navigationItem.titleView = searchController.searchBar
+        searchController.costomSearchBar.delegate = self
+        navigationItem.titleView = searchController.costomSearchBar
         navigationItem.rightBarButtonItem = nil
         searchController.hidesNavigationBarDuringPresentation = false
         searchController.dimsBackgroundDuringPresentation = false
@@ -319,10 +319,11 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
         listTableVC.delegate = self
         listTableVC.tableView.sizeToFit()
         addViewController(viewController: listTableVC)
+        
     }
     
     func didSelectListRow(listString: String) {
-        let searchBar = searchController.searchBar
+        let searchBar = searchController.costomSearchBar!
         searchBar.text = listString
         searchBar.delegate?.searchBar!(searchBar, textDidChange: listString)
     }
@@ -337,7 +338,7 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
     }
     
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
-        searchBar.showsCancelButton = true
+        searchController.costomSearchBar.showCancelBtn()
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
@@ -368,11 +369,16 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
         listTableVC.willMove(toParentViewController: self)
         tableView.addSubview(listTableVC.tableView)
         listTableVC.didMove(toParentViewController: self)
+        tableView.contentOffset = CGPoint(x: 0, y: 0 - self.tableView.contentInset.top)
+        tableView.isScrollEnabled = false
+        navigationController?.navigationBar.barTintColor = UIColor(red: 70/255, green: 55/255, blue: 95/255, alpha: 0.8)
     }
     
     func removeViewController(viewController: UIViewController) {
         tableView.willRemoveSubview(viewController.view)
         viewController.view.removeFromSuperview()
+        tableView.isScrollEnabled = true
+        navigationController?.navigationBar.barTintColor = UIColor(red: 58/255, green: 170/255, blue: 210/255, alpha: 0.8)
     }
     
 }

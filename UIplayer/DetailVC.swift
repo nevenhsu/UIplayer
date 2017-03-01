@@ -20,7 +20,11 @@ class DetailVC: UIViewController,AVPlayerViewControllerDelegate {
     
     var item: Item {
         get {
-            return _item
+            if _item != nil {
+                return _item
+            } else {
+                return Item(context: context)
+            }
         }
         set {
             _item = newValue
@@ -67,6 +71,23 @@ class DetailVC: UIViewController,AVPlayerViewControllerDelegate {
         dismiss(animated: true, completion: nil)
     }
 
+    @IBAction func tappedShareBtn(_ sender: UIButton) {
+        var shareInfo: String
+        var activityController: UIActivityViewController
+        if let videoURL = item.url {
+            shareInfo = "Check out this great UI animation!\n" + videoURL
+        } else {
+            shareInfo = "Check out this great UI animation!\n"
+        }
+        
+        if let img = item.cover as? UIImage {
+            activityController = UIActivityViewController(activityItems: [shareInfo,img], applicationActivities: nil)
+        } else {
+            activityController = UIActivityViewController(activityItems: [shareInfo], applicationActivities: nil)
+        }
+        
+        self.present(activityController, animated: true, completion: nil)
+    }
 
 
 }
