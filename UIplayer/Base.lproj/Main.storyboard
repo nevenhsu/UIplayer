@@ -6,7 +6,6 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
-        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -36,25 +35,25 @@
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="placeholder" translatesAutoresizingMaskIntoConstraints="NO" id="CFU-0b-Z5f">
                                                     <rect key="frame" x="0.0" y="0.0" width="375" height="132"/>
-                                                    <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="App Name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="W7U-pE-AkL">
-                                                    <rect key="frame" x="24" y="95" width="86" height="21"/>
-                                                    <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="18"/>
+                                                    <rect key="frame" x="16" y="102.5" width="88" height="21.5"/>
+                                                    <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="18"/>
                                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Catagory" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oDW-DZ-9BS">
-                                                    <rect key="frame" x="24" y="76.5" width="47.5" height="14.5"/>
+                                                    <rect key="frame" x="16" y="84" width="47.5" height="14.5"/>
                                                     <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="12"/>
                                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstAttribute="bottomMargin" secondItem="W7U-pE-AkL" secondAttribute="bottom" constant="8" id="3Fx-Ud-O7f"/>
-                                                <constraint firstItem="W7U-pE-AkL" firstAttribute="leading" secondItem="uGx-cW-G5P" secondAttribute="leadingMargin" constant="16" id="4Vg-CD-tcX"/>
+                                                <constraint firstAttribute="bottom" secondItem="W7U-pE-AkL" secondAttribute="bottom" constant="8" id="B9C-y2-hha"/>
                                                 <constraint firstAttribute="trailing" secondItem="CFU-0b-Z5f" secondAttribute="trailing" id="CMp-vb-1ap"/>
+                                                <constraint firstItem="W7U-pE-AkL" firstAttribute="leading" secondItem="uGx-cW-G5P" secondAttribute="leading" constant="16" id="Ek7-tS-49p"/>
                                                 <constraint firstItem="CFU-0b-Z5f" firstAttribute="top" secondItem="uGx-cW-G5P" secondAttribute="top" id="HPb-cf-P6X"/>
                                                 <constraint firstItem="W7U-pE-AkL" firstAttribute="top" secondItem="oDW-DZ-9BS" secondAttribute="bottom" constant="4" id="IHa-qa-g7Z"/>
                                                 <constraint firstAttribute="bottom" secondItem="CFU-0b-Z5f" secondAttribute="bottom" id="QB1-hj-Ezr"/>
@@ -62,6 +61,10 @@
                                                 <constraint firstItem="CFU-0b-Z5f" firstAttribute="leading" secondItem="uGx-cW-G5P" secondAttribute="leading" id="ZOh-KP-4L0"/>
                                             </constraints>
                                         </tableViewCellContentView>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="boolean" keyPath="gradientDesign" value="NO"/>
+                                        </userDefinedRuntimeAttributes>
                                         <connections>
                                             <outlet property="catagoryLbl" destination="oDW-DZ-9BS" id="06d-pd-pP1"/>
                                             <outlet property="thumbnail" destination="CFU-0b-Z5f" id="WiY-x7-uPW"/>
@@ -114,14 +117,17 @@
                         <viewControllerLayoutGuide type="top" id="jmj-B3-gLO"/>
                         <viewControllerLayoutGuide type="bottom" id="8Cw-Jk-X2y"/>
                     </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="kMV-uy-icx">
+                    <view key="view" contentMode="scaleToFill" id="kMV-uy-icx" customClass="DetailVCBackhround" customModule="UIplayer" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="gOm-o6-idi">
+                            <imageView contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="gOm-o6-idi">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                 <gestureRecognizers/>
+                                <connections>
+                                    <outletCollection property="gestureRecognizers" destination="fbx-Pk-8cQ" appends="YES" id="Sjx-Cq-y8E"/>
+                                </connections>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iYB-yX-Ckh">
                                 <rect key="frame" x="16" y="592.5" width="220" height="42.5"/>
@@ -136,8 +142,8 @@ professionals across industries.</string>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="App Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1XV-Hw-jdH">
-                                <rect key="frame" x="16" y="563.5" width="86" height="21"/>
-                                <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="18"/>
+                                <rect key="frame" x="16" y="563" width="88" height="21.5"/>
+                                <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="18"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
@@ -194,6 +200,9 @@ professionals across industries.</string>
                             <constraint firstItem="8Cw-Jk-X2y" firstAttribute="top" secondItem="3hR-GQ-Fz5" secondAttribute="bottom" constant="32" id="rKK-Gs-qg7"/>
                             <constraint firstAttribute="trailing" secondItem="gOm-o6-idi" secondAttribute="trailing" id="sgF-Je-dpn"/>
                         </constraints>
+                        <connections>
+                            <outlet property="cover" destination="gOm-o6-idi" id="XOp-YV-Apu"/>
+                        </connections>
                     </view>
                     <connections>
                         <outlet property="cover" destination="gOm-o6-idi" id="wtb-Ve-am8"/>
@@ -202,6 +211,11 @@ professionals across industries.</string>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="diV-j9-tcz" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <swipeGestureRecognizer direction="down" id="fbx-Pk-8cQ">
+                    <connections>
+                        <action selector="swipeDown:" destination="cJd-Jx-SsT" id="Wte-la-SzN"/>
+                    </connections>
+                </swipeGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="1719" y="-561"/>
         </scene>
@@ -235,6 +249,9 @@ professionals across industries.</string>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             </tableViewCell>
                         </prototypes>
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="boolean" keyPath="backgroundStyle" value="YES"/>
+                        </userDefinedRuntimeAttributes>
                         <connections>
                             <outlet property="dataSource" destination="LwI-3N-8ln" id="twa-Be-UxE"/>
                             <outlet property="delegate" destination="LwI-3N-8ln" id="Bd3-fe-LOR"/>
@@ -253,7 +270,7 @@ professionals across industries.</string>
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="pGj-OP-GSD" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" barStyle="black" id="3nw-Sn-lNT">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="black" id="3nw-Sn-lNT">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>

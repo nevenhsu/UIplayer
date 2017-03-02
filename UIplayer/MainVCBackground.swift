@@ -11,7 +11,10 @@ import UIKit
 class MainVCBackground: UITableView {
 
     override func draw(_ rect: CGRect) {
-            
+        dayLightBackground()
+    }
+    
+    func dayLightBackground() {
         //// Color Declarations
         let color1 = UIColor(red: 58/255, green: 170/255, blue: 210/255, alpha: 1.0).cgColor
         let color2 = UIColor(red: 222/255, green: 233/255, blue: 239/255, alpha: 1.0).cgColor

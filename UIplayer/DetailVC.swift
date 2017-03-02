@@ -89,5 +89,9 @@ class DetailVC: UIViewController,AVPlayerViewControllerDelegate {
         self.present(activityController, animated: true, completion: nil)
     }
 
+    @IBAction func swipeDown(_ sender: UISwipeGestureRecognizer) {
+        dismiss(animated: true, completion: nil)
+
+    }
 
 }

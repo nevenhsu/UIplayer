@@ -319,7 +319,6 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
         listTableVC.delegate = self
         listTableVC.tableView.sizeToFit()
         addViewController(viewController: listTableVC)
-        
     }
     
     func didSelectListRow(listString: String) {

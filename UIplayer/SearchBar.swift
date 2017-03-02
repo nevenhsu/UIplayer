@@ -67,7 +67,7 @@ class SearchBar: UISearchBar {
         self.showsCancelButton = true
         if let cancelButton = self.value(forKey: "cancelButton") as? UIButton {
             cancelButton.setTitle("Cancel", for: UIControlState())
-            cancelButton.titleLabel!.font = UIFont(name: "HelveticaNeue-Light", size: 14)
+            cancelButton.titleLabel!.font = UIFont(name: "HelveticaNeue-Medium", size: 16)
         }
     }
     
