@@ -62,9 +62,6 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                        <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="boolean" keyPath="gradientDesign" value="NO"/>
-                                        </userDefinedRuntimeAttributes>
                                         <connections>
                                             <outlet property="catagoryLbl" destination="oDW-DZ-9BS" id="06d-pd-pP1"/>
                                             <outlet property="thumbnail" destination="CFU-0b-Z5f" id="WiY-x7-uPW"/>
@@ -249,9 +246,6 @@ professionals across industries.</string>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             </tableViewCell>
                         </prototypes>
-                        <userDefinedRuntimeAttributes>
-                            <userDefinedRuntimeAttribute type="boolean" keyPath="backgroundStyle" value="YES"/>
-                        </userDefinedRuntimeAttributes>
                         <connections>
                             <outlet property="dataSource" destination="LwI-3N-8ln" id="twa-Be-UxE"/>
                             <outlet property="delegate" destination="LwI-3N-8ln" id="Bd3-fe-LOR"/>

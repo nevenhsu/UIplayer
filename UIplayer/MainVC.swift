@@ -15,11 +15,12 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
     @IBOutlet var searchBtnItem: UIBarButtonItem!
     var controller: NSFetchedResultsController<Item>!
     var searchController: SearchController!
+    var refreshController: UIRefreshControl!
     var mainStoryboard:UIStoryboard!
     var listTableVC: ListTableVC!
     private var _itemsDic: [[String: AnyObject]]!
     private var _newIndex: Int!
-    private var _baseURL = URL(string: "http://79.170.44.135/nevenhsu.com/")
+    private var _baseURL = URL(string: "http://nevenhsu.ml/")
     private var _jsonPath: String = "UIplayer/UIplayer.json"
     let firstDownloadTimes = 4
 
@@ -65,10 +66,16 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
         super.viewDidLoad()
         tableView.delegate = self
         tableView.dataSource = self
+        //set up Refresh Controller
+        refreshController = UIRefreshControl()
+        refreshController.tintColor = UIColor.white
+        refreshController.addTarget(self, action: #selector(self.refresh), for: .valueChanged)
+        tableView.addSubview(refreshController)
+        
         retriveJson(url: jsonURL)
         fetchItem(predicate: nil)
     }
-
+    
     func numberOfSections(in tableView: UITableView) -> Int {
         if let sections = controller.sections {
             return sections.count
@@ -191,6 +198,15 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
                 }
             }
         }
+    }
+    
+    func refresh() {
+        self.retriveJson(url: jsonURL)
+        if refreshController.isRefreshing {
+            self.fetchItem(predicate: nil)
+            refreshController.endRefreshing()
+        }
+        tableView.reloadData()
     }
     
     func createItem(itemDic: [String: AnyObject], reCreate: Bool) {
