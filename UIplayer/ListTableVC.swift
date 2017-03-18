@@ -10,9 +10,11 @@ import UIKit
 
 protocol ListTableViewControllerDelegate {
     func didSelectListRow(listString: String)
+    func cancelSearch()
 }
 
 class ListTableVC: UITableViewController {
+    
     var listArray = ["Home","Calendar","Lists","Maps","Search","Settings","Home","Calendar","Lists","Maps","Search","Settings","Home","Calendar","Lists","Maps","Search","Settings"]
     var delegate: ListTableViewControllerDelegate!
     
@@ -27,14 +29,25 @@ class ListTableVC: UITableViewController {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return listArray.count
     }
-
+    
+    override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return 96
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 48
+    }
+    
+    override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        let footer = UIView()
+        footer.backgroundColor = UIColor.clear
+        
+        return footer
+    }
+    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ListCell", for: indexPath) as! ListCell
-        let underlineAttribute = [NSUnderlineStyleAttributeName: NSUnderlineStyle.styleSingle.rawValue,NSUnderlineColorAttributeName: UIColor(white: 1, alpha: 0.5) ] as [String : Any]
-        let underlineAttributedString = NSAttributedString(string: listArray[indexPath.row], attributes: underlineAttribute)
-        cell.textLabel?.attributedText = underlineAttributedString
-        cell.textLabel?.textColor = UIColor.white
-        cell.backgroundColor = UIColor.clear
+        cell.titleLbl.text = listArray[indexPath.row]
         
         return cell
     }
@@ -42,6 +55,10 @@ class ListTableVC: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let listString = listArray[indexPath.row]
         delegate.didSelectListRow(listString: listString)
+    }
+    
+    @IBAction func swipeCancelSearch(_ sender: Any) {
+        delegate.cancelSearch()
     }
 
 }

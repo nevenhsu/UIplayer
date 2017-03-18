@@ -13,6 +13,8 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
     
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet var searchBtnItem: UIBarButtonItem!
+    @IBOutlet weak var noMatchWarning: UIView!
+    @IBOutlet weak var networkError: UIView!
     var controller: NSFetchedResultsController<Item>!
     var searchController: SearchController!
     var refreshController: UIRefreshControl!
@@ -23,6 +25,8 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
     private var _baseURL = URL(string: "http://nevenhsu.ml/")
     private var _jsonPath: String = "UIplayer/UIplayer.json"
     let firstDownloadTimes = 4
+    var searching = false
+    var isDownloading = false
 
     var jsonURL : URL {
         get {
@@ -66,6 +70,10 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
         super.viewDidLoad()
         tableView.delegate = self
         tableView.dataSource = self
+        noMatchWarning.isHidden = true
+        networkError.isHidden = true
+        isDownloading = false
+        
         //set up Refresh Controller
         refreshController = UIRefreshControl()
         refreshController.tintColor = UIColor.white
@@ -86,8 +94,21 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if let sectionInfo = controller.sections {
             let section = sectionInfo[section]
+            
+            if section.numberOfObjects == 0 && searching {
+                noMatchWarning.isHidden = false
+                networkError.isHidden = true
+            } else if section.numberOfObjects == 0 {
+                networkError.isHidden = false
+                noMatchWarning.isHidden = true
+            }else {
+                noMatchWarning.isHidden = true
+                networkError.isHidden = true
+            }
+            
             return section.numberOfObjects
         }
+        
         return 0
     }
     
@@ -187,26 +208,37 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
     }
     
     func retriveJson(url: URL) -> Void {
-        let networkOperation = NetworkOperation(url: jsonURL)
-        networkOperation.downloadJSON { (jsonDic) in
-            if let itemsDic = jsonDic["items"] as? [[String: AnyObject]]
-            {
-                self.itemsDic = itemsDic
-                for itemDic in itemsDic.prefix(upTo: self.firstDownloadTimes)
+        if !isDownloading {
+            isDownloading = true
+            let networkOperation = NetworkOperation(url: jsonURL)
+            networkOperation.downloadJSON { (jsonDic) in
+                self.isDownloading = false
+                self.networkError.isHidden = true
+                if let itemsDic = jsonDic["items"] as? [[String: AnyObject]]
                 {
-                    self.createItem(itemDic: itemDic, reCreate: true)
+                    self.itemsDic = itemsDic
+                    for itemDic in itemsDic.prefix(upTo: self.firstDownloadTimes)
+                    {
+                        self.createItem(itemDic: itemDic, reCreate: true)
+                    }
                 }
             }
         }
     }
     
     func refresh() {
+        refreshController.beginRefreshing()
+        
+        UIView.animate(withDuration: 0.25, delay: 0, options: UIViewAnimationOptions.beginFromCurrentState, animations: {
+            self.tableView.contentOffset = CGPoint(x: 0, y: -128)
+        }, completion: nil)
+        
         self.retriveJson(url: jsonURL)
         if refreshController.isRefreshing {
             self.fetchItem(predicate: nil)
-            refreshController.endRefreshing()
         }
         tableView.reloadData()
+        refreshController.endRefreshing()
     }
     
     func createItem(itemDic: [String: AnyObject], reCreate: Bool) {
@@ -318,6 +350,10 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
         }
     }
     
+    @IBAction func tappedTryAgainBtn(_ sender: UIButton) {
+        refresh()
+    }
+    
     @IBAction func tappedSearchBtn(_ sender: UIBarButtonItem) {
         // Instantiate SearchController and SearchBar
         searchController = SearchController(searchResultsController: self, frame: (navigationController?.navigationBar.frame)!)
@@ -329,27 +365,28 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
         searchController.dimsBackgroundDuringPresentation = false
         searchController.searchBar.sizeToFit()
         
-        //Instantiate ListTableView
-        mainStoryboard = UIStoryboard(name: "Main", bundle: nil)
-        listTableVC = mainStoryboard.instantiateViewController(withIdentifier: "ListTableVC") as? ListTableVC
-        listTableVC.delegate = self
-        listTableVC.tableView.sizeToFit()
-        addViewController(viewController: listTableVC)
+        showList()
     }
+    
     
     func didSelectListRow(listString: String) {
         let searchBar = searchController.costomSearchBar!
         searchBar.text = listString
         searchBar.delegate?.searchBar!(searchBar, textDidChange: listString)
+        searchBar.endEditing(true)
     }
     
-    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+    func cancelSearch() {
         //Restore Search BarItem and ReFetch Item
         navigationItem.titleView = nil
         navigationItem.rightBarButtonItem = searchBtnItem
         fetchItem(predicate: nil)
         tableView.reloadData()
-        removeViewController(viewController: listTableVC)
+        removeList()
+    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        cancelSearch()
     }
     
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
@@ -376,24 +413,75 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
             fetchItem(predicate: predicate)
             tableView.reloadData()
         } else {
+            noMatchWarning.isHidden = true
             addViewController(viewController: listTableVC)
         }
     }
     
     func addViewController(viewController: UIViewController) {
-        listTableVC.willMove(toParentViewController: self)
-        tableView.addSubview(listTableVC.tableView)
-        listTableVC.didMove(toParentViewController: self)
-        tableView.contentOffset = CGPoint(x: 0, y: 0 - self.tableView.contentInset.top)
-        tableView.isScrollEnabled = false
-        navigationController?.navigationBar.barTintColor = UIColor(red: 70/255, green: 55/255, blue: 95/255, alpha: 0.8)
-    }
+        viewController.willMove(toParentViewController: self)
+        tableView.addSubview(viewController.view)
+        viewController.view.alpha = 0
+        viewController.didMove(toParentViewController: self)
+        
+        UIView.animate(withDuration: 0.25, delay: 0, options: .curveEaseInOut, animations: {
+            viewController.view.alpha = 1
+        }) { (finished) in
+            viewController.didMove(toParentViewController: self)
+            self.tableView.contentOffset = CGPoint(x: 0, y: 0 - self.tableView.contentInset.top)
+            self.tableView.isScrollEnabled = false
+
+            }
+        }
     
     func removeViewController(viewController: UIViewController) {
         tableView.willRemoveSubview(viewController.view)
-        viewController.view.removeFromSuperview()
-        tableView.isScrollEnabled = true
-        navigationController?.navigationBar.barTintColor = UIColor(red: 58/255, green: 170/255, blue: 210/255, alpha: 0.8)
+        
+        UIView.animate(withDuration: 0.25, delay: 0, options: .curveEaseInOut, animations: { 
+            viewController.view.alpha = 0
+        }) { (finished) in
+            viewController.view.removeFromSuperview()
+            self.tableView.isScrollEnabled = true
+        }
+    }
+    
+    
+    func showList() {
+        //Instantiate ListTableView
+        mainStoryboard = UIStoryboard(name: "Main", bundle: nil)
+        listTableVC = mainStoryboard.instantiateViewController(withIdentifier: "ListTableVC") as? ListTableVC
+        listTableVC.delegate = self
+        listTableVC.tableView.sizeToFit()
+        
+        //Add list
+        listTableVC.willMove(toParentViewController: self)
+        tableView.addSubview(listTableVC.view)
+        tableView.contentOffset = CGPoint(x: 0, y: 0 - self.tableView.contentInset.top)
+        tableView.isScrollEnabled = false
+        
+        //Animate
+        listTableVC.view.transform = CGAffineTransform(translationX: tableView.frame.size.width, y: 0)
+        
+        UIView.animate(withDuration: 0.25, delay: 0, options: .curveEaseInOut, animations: {
+            self.listTableVC.view.transform = CGAffineTransform(translationX: 0, y: 0)
+        }, completion: { (finished) in
+            self.listTableVC.didMove(toParentViewController: self)
+            self.searching = true
+        })
+    }
+    
+    func removeList() {
+        tableView.willRemoveSubview(listTableVC.view)
+        //Animate list
+        listTableVC.view.transform = CGAffineTransform(translationX: 0, y: 0)
+        
+        UIView.animate(withDuration: 0.25, delay: 0, options: .curveEaseInOut, animations: { 
+            self.listTableVC.view.transform = CGAffineTransform(translationX: self.tableView.frame.size.width, y: 0)
+        }) { (finished) in
+            self.listTableVC.view.removeFromSuperview()
+            self.tableView.isScrollEnabled = true
+            self.searching = false
+        }
     }
     
 }

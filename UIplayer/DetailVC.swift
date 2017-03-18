@@ -10,13 +10,14 @@ import UIKit
 import AVKit
 import AVFoundation
 
-class DetailVC: UIViewController,AVPlayerViewControllerDelegate {
+class DetailVC: UIViewController,AVPlayerViewControllerDelegate,UIViewControllerTransitioningDelegate {
     @IBOutlet weak var titleLbl: UILabel!
     @IBOutlet weak var infoLbl: UILabel!
     @IBOutlet weak var cover: UIImageView!
     private var _item: Item!
     var playerVC: AVPlayerViewController!
     var player: AVPlayer?
+    var dismissTransition: DismissTransition!
     
     var item: Item {
         get {
@@ -34,6 +35,8 @@ class DetailVC: UIViewController,AVPlayerViewControllerDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         playerVC = AVPlayerViewController()
+        dismissTransition = DismissTransition()
+        self.transitioningDelegate = self
         playerVC.delegate = self
         
         if let url = item.url {
@@ -67,6 +70,11 @@ class DetailVC: UIViewController,AVPlayerViewControllerDelegate {
         }
     }
 
+    @IBAction func swipeToDismiss(_ sender: UISwipeGestureRecognizer) {
+        dismiss(animated: true, completion: nil)
+    }
+
+    
     @IBAction func tappedDoneBtn(_ sender: Any) {
         dismiss(animated: true, completion: nil)
     }
@@ -89,9 +97,10 @@ class DetailVC: UIViewController,AVPlayerViewControllerDelegate {
         self.present(activityController, animated: true, completion: nil)
     }
 
-    @IBAction func swipeDown(_ sender: UISwipeGestureRecognizer) {
-        dismiss(animated: true, completion: nil)
-
+    
+    
+    func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        return dismissTransition
     }
 
 }
