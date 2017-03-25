@@ -140,6 +140,11 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="UMotion" id="YbA-dK-GrA">
+                        <barButtonItem key="leftBarButtonItem" image="backArrow" id="Vik-og-I4i">
+                            <connections>
+                                <action selector="tappedBackArrowBtn:" destination="BYZ-38-t0r" id="RYc-kg-NbO"/>
+                            </connections>
+                        </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" systemItem="search" id="UJA-q9-RM1">
                             <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <connections>
@@ -148,6 +153,7 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="backBtnItem" destination="Vik-og-I4i" id="mn5-PJ-OwB"/>
                         <outlet property="networkError" destination="OTr-ko-fCe" id="Ap8-FY-bsw"/>
                         <outlet property="noMatchWarning" destination="Lbi-Xw-3gn" id="fVr-rK-poQ"/>
                         <outlet property="searchBtnItem" destination="UJA-q9-RM1" id="umN-rV-eHa"/>
@@ -189,7 +195,7 @@
                                 </connections>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iYB-yX-Ckh">
-                                <rect key="frame" x="16" y="600.5" width="220" height="42.5"/>
+                                <rect key="frame" x="16" y="600" width="220" height="43"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="220" id="nhV-hb-GGp"/>
                                 </constraints>
@@ -201,15 +207,15 @@ professionals across industries.</string>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="App Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1XV-Hw-jdH">
-                                <rect key="frame" x="16" y="571" width="88" height="21.5"/>
+                                <rect key="frame" x="16" y="570" width="88" height="22"/>
                                 <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="18"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Cpi-R0-aYZ">
-                                <rect key="frame" x="16" y="28" width="59" height="22"/>
+                                <rect key="frame" x="16" y="28" width="62" height="22"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="59" id="uZN-O7-pf5"/>
+                                    <constraint firstAttribute="width" constant="62" id="uZN-O7-pf5"/>
                                     <constraint firstAttribute="height" constant="22" id="xpB-6O-t1b"/>
                                 </constraints>
                                 <state key="normal" backgroundImage="back"/>
@@ -219,7 +225,8 @@ professionals across industries.</string>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="O22-l5-cBb">
-                                <rect key="frame" x="155.5" y="301.5" width="64" height="64"/>
+                                <rect key="frame" x="156" y="302" width="64" height="64"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="64" id="bvo-v3-rvz"/>
                                     <constraint firstAttribute="height" constant="64" id="udd-bh-2Ka"/>
@@ -229,11 +236,11 @@ professionals across industries.</string>
                                     <action selector="playVideoBtn:" destination="cJd-Jx-SsT" eventType="touchUpInside" id="PXI-K9-FCJ"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3hR-GQ-Fz5">
-                                <rect key="frame" x="319" y="611" width="48" height="48"/>
+                            <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3hR-GQ-Fz5">
+                                <rect key="frame" x="303" y="595" width="64" height="64"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="48" id="3eV-tt-B2N"/>
-                                    <constraint firstAttribute="width" constant="48" id="GTe-ty-Apv"/>
+                                    <constraint firstAttribute="height" constant="64" id="3eV-tt-B2N"/>
+                                    <constraint firstAttribute="width" constant="64" id="GTe-ty-Apv"/>
                                 </constraints>
                                 <state key="normal" image="share"/>
                                 <connections>
@@ -286,26 +293,9 @@ professionals across industries.</string>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         <color key="sectionIndexBackgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                        <view key="tableHeaderView" contentMode="scaleToFill" id="pBC-V8-y6t">
-                            <rect key="frame" x="0.0" y="0.0" width="375" height="48"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            <subviews>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Catagory" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Xhu-A9-JGB">
-                                    <rect key="frame" x="16" y="13.5" width="76.5" height="21.5"/>
-                                    <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="18"/>
-                                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                    <nil key="highlightedColor"/>
-                                </label>
-                            </subviews>
-                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                            <constraints>
-                                <constraint firstItem="Xhu-A9-JGB" firstAttribute="centerY" secondItem="pBC-V8-y6t" secondAttribute="centerY" id="NVp-qH-VAf"/>
-                                <constraint firstItem="Xhu-A9-JGB" firstAttribute="leading" secondItem="pBC-V8-y6t" secondAttribute="leading" constant="16" id="T7w-S2-4hM"/>
-                            </constraints>
-                        </view>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="ListCell" id="3iA-lz-eQz" customClass="ListCell" customModule="UIplayer" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="76" width="375" height="44"/>
+                                <rect key="frame" x="0.0" y="28" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="3iA-lz-eQz" id="s0g-sn-rPv">
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
@@ -376,10 +366,11 @@ professionals across industries.</string>
         </scene>
     </scenes>
     <resources>
-        <image name="back" width="59" height="22"/>
+        <image name="back" width="61" height="21"/>
+        <image name="backArrow" width="12" height="21"/>
         <image name="placeholder" width="375" height="134"/>
         <image name="play" width="60" height="60"/>
-        <image name="share" width="16" height="22"/>
+        <image name="share" width="64" height="64"/>
         <image name="tryAgain" width="117" height="42"/>
     </resources>
 </document>

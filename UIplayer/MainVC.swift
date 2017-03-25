@@ -12,9 +12,11 @@ import CoreData
 class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetchedResultsControllerDelegate, UISearchBarDelegate, UISearchControllerDelegate, ListTableViewControllerDelegate  {
     
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet var backBtnItem: UIBarButtonItem!
     @IBOutlet var searchBtnItem: UIBarButtonItem!
     @IBOutlet weak var noMatchWarning: UIView!
     @IBOutlet weak var networkError: UIView!
+    
     var controller: NSFetchedResultsController<Item>!
     var searchController: SearchController!
     var refreshController: UIRefreshControl!
@@ -73,6 +75,12 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
         noMatchWarning.isHidden = true
         networkError.isHidden = true
         isDownloading = false
+        navigationItem.leftBarButtonItem = nil
+        
+        // Instantiate SearchController and SearchBar
+        searchController = SearchController(searchResultsController: self, frame: (navigationController?.navigationBar.frame)!)
+        searchController.delegate = self
+        searchController.costomSearchBar.delegate = self
         
         //set up Refresh Controller
         refreshController = UIRefreshControl()
@@ -135,6 +143,7 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
             performSegue(withIdentifier: "DetailVC", sender: item)
         }
     }
+    
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "DetailVC" {
@@ -355,12 +364,9 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
     }
     
     @IBAction func tappedSearchBtn(_ sender: UIBarButtonItem) {
-        // Instantiate SearchController and SearchBar
-        searchController = SearchController(searchResultsController: self, frame: (navigationController?.navigationBar.frame)!)
-        searchController.delegate = self
-        searchController.costomSearchBar.delegate = self
         navigationItem.titleView = searchController.costomSearchBar
         navigationItem.rightBarButtonItem = nil
+        navigationItem.leftBarButtonItem = backBtnItem
         searchController.hidesNavigationBarDuringPresentation = false
         searchController.dimsBackgroundDuringPresentation = false
         searchController.searchBar.sizeToFit()
@@ -368,6 +374,20 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
         showList()
     }
     
+    
+    func hideKeyboard() {
+        if let searchBar = searchController.costomSearchBar {
+            searchBar.endEditing(true)
+        }
+    }
+    
+    func viewDidScroll() {
+        hideKeyboard()
+    }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        hideKeyboard()
+    }
     
     func didSelectListRow(listString: String) {
         let searchBar = searchController.costomSearchBar!
@@ -380,14 +400,25 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
         //Restore Search BarItem and ReFetch Item
         navigationItem.titleView = nil
         navigationItem.rightBarButtonItem = searchBtnItem
+        navigationItem.leftBarButtonItem = nil
         fetchItem(predicate: nil)
         tableView.reloadData()
         removeList()
     }
     
+    @IBAction func tappedBackArrowBtn(_ sender: UIBarButtonItem) {
+        cancelSearch()
+    }
+    
+    
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         cancelSearch()
     }
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.endEditing(true)
+    }
+    
     
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
         searchController.costomSearchBar.showCancelBtn()
@@ -409,7 +440,7 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
                     self.createItem(itemDic: itemDic,reCreate: false)
                 }
             }
-            let predicate = NSPredicate(format: "(title contains [cd] %@) || (category contains[cd] %@)", searchText, searchText)
+            let predicate = NSPredicate(format: "(title contains [cd] %@) || (ANY tags.name contains[cd] %@) || (category contains [cd] %@)", searchText, searchText,searchText)
             fetchItem(predicate: predicate)
             tableView.reloadData()
         } else {

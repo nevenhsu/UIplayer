@@ -58,6 +58,10 @@ class DetailVC: UIViewController,AVPlayerViewControllerDelegate,UIViewController
 
     }
     
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
+    
     @IBAction func playVideoBtn(_ sender: Any) {
         playerVC.player = player
         self.present(playerVC, animated: true) { 
@@ -96,8 +100,6 @@ class DetailVC: UIViewController,AVPlayerViewControllerDelegate,UIViewController
         
         self.present(activityController, animated: true, completion: nil)
     }
-
-    
     
     func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         return dismissTransition

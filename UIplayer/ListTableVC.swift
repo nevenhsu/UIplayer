@@ -11,6 +11,7 @@ import UIKit
 protocol ListTableViewControllerDelegate {
     func didSelectListRow(listString: String)
     func cancelSearch()
+    func viewDidScroll()
 }
 
 class ListTableVC: UITableViewController {
@@ -55,6 +56,10 @@ class ListTableVC: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let listString = listArray[indexPath.row]
         delegate.didSelectListRow(listString: listString)
+    }
+    
+    override func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        delegate.viewDidScroll()
     }
     
     @IBAction func swipeCancelSearch(_ sender: Any) {
