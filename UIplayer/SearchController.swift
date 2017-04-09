@@ -13,13 +13,11 @@ class SearchController: UISearchController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
     }
 
     init(searchResultsController: UIViewController!, frame: CGRect) {
         super.init(searchResultsController: searchResultsController)
         costomSearchBar = SearchBar(frame: frame)
-        
     }
     
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
@@ -29,6 +27,6 @@ class SearchController: UISearchController {
     required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)!
     }
-    
+  
 
 }

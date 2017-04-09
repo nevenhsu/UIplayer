@@ -8,7 +8,7 @@
 
 import UIKit
 
-class MainVCBackground: UITableView {
+class MainVCBackground: UIView {
 
     override func draw(_ rect: CGRect) {
         setBackground()
@@ -24,18 +24,18 @@ class MainVCBackground: UITableView {
         let context = UIGraphicsGetCurrentContext()
         
         //// Gradient Declarations
-        let backgroundGradient = CGGradient(colorsSpace: CGColorSpaceCreateDeviceRGB(), colors: [color1, color2, color3, color4] as CFArray, locations: [0.0, 0.4, 0.85, 1.0])
+        let backgroundGradient = CGGradient(colorsSpace: CGColorSpaceCreateDeviceRGB(), colors: [color1, color2, color3, color4] as CFArray, locations: [0.0, 0.55, 0.85, 1.0])
         
         let mainScreen = UIScreen.main
         let width = mainScreen.bounds.size.width
         let height = mainScreen.bounds.size.height
         
         //// Background Drawing
-        let backgroundPath = UIBezierPath(rect: CGRect(x: 0.0, y: -64.0, width: width, height: height + 20))
+        let backgroundPath = UIBezierPath(rect: CGRect(x: 0.0, y: 0, width: width, height: height))
         context?.saveGState()
         backgroundPath.addClip()
         context?.drawLinearGradient(backgroundGradient!,
-                                    start: CGPoint(x: 160, y: 0),
+                                    start: CGPoint(x: 160, y: -64),
                                     end: CGPoint(x: 160, y: height - 64),
                                     options: [.drawsBeforeStartLocation, .drawsAfterEndLocation])
         context?.restoreGState()

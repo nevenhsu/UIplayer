@@ -16,9 +16,11 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
     @IBOutlet var searchBtnItem: UIBarButtonItem!
     @IBOutlet weak var noMatchWarning: UIView!
     @IBOutlet weak var networkError: UIView!
+    @IBOutlet weak var footer: UIImageView!
     
     var controller: NSFetchedResultsController<Item>!
     var searchController: SearchController!
+    var searchBar: SearchBar!
     var refreshController: UIRefreshControl!
     var mainStoryboard:UIStoryboard!
     var listTableVC: ListTableVC!
@@ -28,6 +30,7 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
     private var _jsonPath: String = "UIplayer/UIplayer.json"
     let firstDownloadTimes = 4
     var searching = false
+    var listHidden = true
     var isDownloading = false
 
     var jsonURL : URL {
@@ -74,13 +77,14 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
         tableView.dataSource = self
         noMatchWarning.isHidden = true
         networkError.isHidden = true
+        footer.isHidden = true
         isDownloading = false
         navigationItem.leftBarButtonItem = nil
+        listHidden = true
+        searching = false
         
-        // Instantiate SearchController and SearchBar
-        searchController = SearchController(searchResultsController: self, frame: (navigationController?.navigationBar.frame)!)
-        searchController.delegate = self
-        searchController.costomSearchBar.delegate = self
+        initListView()
+        initSearchController()
         
         //set up Refresh Controller
         refreshController = UIRefreshControl()
@@ -91,6 +95,26 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
         retriveJson(url: jsonURL)
         fetchItem(predicate: nil)
     }
+    
+    
+    func initListView() {
+        //Instantiate ListTableView
+        mainStoryboard = UIStoryboard(name: "Main", bundle: nil)
+        listTableVC = mainStoryboard.instantiateViewController(withIdentifier: "ListTableVC") as? ListTableVC
+        listTableVC.delegate = self
+        listTableVC.tableView.sizeToFit()
+    }
+    
+    func initSearchController() {
+        // Instantiate SearchController and SearchBar
+        searchController = SearchController(searchResultsController: self, frame: (navigationController?.navigationBar.frame)!)
+        searchBar = searchController.costomSearchBar
+        searchController.delegate = self
+        searchController.costomSearchBar.delegate = self
+        searchBar.sizeToFit()
+    }
+    
+    
     
     func numberOfSections(in tableView: UITableView) -> Int {
         if let sections = controller.sections {
@@ -104,9 +128,16 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
             let section = sectionInfo[section]
             
             if section.numberOfObjects == 0 && searching {
-                noMatchWarning.isHidden = false
-                networkError.isHidden = true
-            } else if section.numberOfObjects == 0 {
+                
+                if let searchText = searchBar.text, searchText.characters.count > 0 {
+                    noMatchWarning.isHidden = false
+                    networkError.isHidden = true
+                } else {
+                    noMatchWarning.isHidden = true
+                    networkError.isHidden = true
+                }
+                
+            } else if section.numberOfObjects == 0  {
                 networkError.isHidden = false
                 noMatchWarning.isHidden = true
             }else {
@@ -236,18 +267,30 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
     }
     
     func refresh() {
-        refreshController.beginRefreshing()
-        
-        UIView.animate(withDuration: 0.25, delay: 0, options: UIViewAnimationOptions.beginFromCurrentState, animations: {
-            self.tableView.contentOffset = CGPoint(x: 0, y: -128)
-        }, completion: nil)
-        
-        self.retriveJson(url: jsonURL)
-        if refreshController.isRefreshing {
-            self.fetchItem(predicate: nil)
+        if !searching {
+            refreshController.beginRefreshing()
+            
+            UIView.animate(withDuration: 0.25, delay: 0, options: UIViewAnimationOptions.beginFromCurrentState, animations: {
+                self.tableView.contentOffset = CGPoint(x: 0, y: -128)
+            }, completion: nil)
+            
+            self.retriveJson(url: jsonURL)
+            if refreshController.isRefreshing {
+                self.fetchItem(predicate: nil)
+            }
+            tableView.reloadData()
+            refreshController.endRefreshing()
+        } else {
+            refreshController.endRefreshing()
         }
-        tableView.reloadData()
-        refreshController.endRefreshing()
+    }
+    
+    func toggleRefreshColor() {
+        if !searching {
+            refreshController.tintColor = UIColor.white
+        } else {
+            refreshController.tintColor = UIColor.clear
+        }
     }
     
     func createItem(itemDic: [String: AnyObject], reCreate: Bool) {
@@ -359,26 +402,25 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
         }
     }
     
+    
     @IBAction func tappedTryAgainBtn(_ sender: UIButton) {
         refresh()
     }
     
     @IBAction func tappedSearchBtn(_ sender: UIBarButtonItem) {
-        navigationItem.titleView = searchController.costomSearchBar
+        searching = true
+        navigationItem.titleView = searchBar
         navigationItem.rightBarButtonItem = nil
         navigationItem.leftBarButtonItem = backBtnItem
         searchController.hidesNavigationBarDuringPresentation = false
         searchController.dimsBackgroundDuringPresentation = false
-        searchController.searchBar.sizeToFit()
-        
+        searchBar.becomeFirstResponder()
         showList()
+        toggleRefreshColor()
     }
     
-    
     func hideKeyboard() {
-        if let searchBar = searchController.costomSearchBar {
-            searchBar.endEditing(true)
-        }
+        searchBar.endEditing(true)
     }
     
     func viewDidScroll() {
@@ -387,16 +429,28 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         hideKeyboard()
+        
+        let yOffset = scrollView.contentOffset.y
+        let height = scrollView.bounds.size.height
+        let size = scrollView.contentSize.height
+        
+        if yOffset + height >= size && size >= height {
+            footer.isHidden = false
+        } else {
+            footer.isHidden = true
+        }
     }
     
     func didSelectListRow(listString: String) {
-        let searchBar = searchController.costomSearchBar!
         searchBar.text = listString
         searchBar.delegate?.searchBar!(searchBar, textDidChange: listString)
         searchBar.endEditing(true)
     }
     
     func cancelSearch() {
+        //Remove searchBar text
+        searchBar.text = ""
+        
         //Restore Search BarItem and ReFetch Item
         navigationItem.titleView = nil
         navigationItem.rightBarButtonItem = searchBtnItem
@@ -404,6 +458,7 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
         fetchItem(predicate: nil)
         tableView.reloadData()
         removeList()
+        self.searching = false
     }
     
     @IBAction func tappedBackArrowBtn(_ sender: UIBarButtonItem) {
@@ -421,7 +476,7 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
     
     
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
-        searchController.costomSearchBar.showCancelBtn()
+        resetSearchController()
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
@@ -444,10 +499,16 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
             fetchItem(predicate: predicate)
             tableView.reloadData()
         } else {
-            noMatchWarning.isHidden = true
-            addViewController(viewController: listTableVC)
+            resetSearchController()
         }
     }
+    
+    func resetSearchController() {
+        searchBar.text = ""
+        noMatchWarning.isHidden = true
+        addViewController(viewController: listTableVC)
+    }
+    
     
     func addViewController(viewController: UIViewController) {
         viewController.willMove(toParentViewController: self)
@@ -478,12 +539,6 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
     
     
     func showList() {
-        //Instantiate ListTableView
-        mainStoryboard = UIStoryboard(name: "Main", bundle: nil)
-        listTableVC = mainStoryboard.instantiateViewController(withIdentifier: "ListTableVC") as? ListTableVC
-        listTableVC.delegate = self
-        listTableVC.tableView.sizeToFit()
-        
         //Add list
         listTableVC.willMove(toParentViewController: self)
         tableView.addSubview(listTableVC.view)
@@ -497,7 +552,7 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
             self.listTableVC.view.transform = CGAffineTransform(translationX: 0, y: 0)
         }, completion: { (finished) in
             self.listTableVC.didMove(toParentViewController: self)
-            self.searching = true
+            self.listHidden = false
         })
     }
     
@@ -511,7 +566,7 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
         }) { (finished) in
             self.listTableVC.view.removeFromSuperview()
             self.tableView.isScrollEnabled = true
-            self.searching = false
+            self.listHidden = true
         }
     }
     

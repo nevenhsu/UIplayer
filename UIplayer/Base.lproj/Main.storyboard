@@ -18,12 +18,19 @@
                         <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
                     </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC" customClass="MainVCBackground" customModule="UIplayer" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="132" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="pcH-Dp-cAx" customClass="MainVCBackground" customModule="UIplayer" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="footer" translatesAutoresizingMaskIntoConstraints="NO" id="GC3-VK-hLD">
+                                <rect key="frame" x="0.0" y="603" width="375" height="64"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="64" id="EKh-DM-8z9"/>
+                                </constraints>
+                            </imageView>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="132" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="pcH-Dp-cAx">
+                                <rect key="frame" x="0.0" y="64" width="375" height="603"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <color key="sectionIndexBackgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <prototypes>
@@ -131,10 +138,13 @@
                             <constraint firstAttribute="trailing" secondItem="pcH-Dp-cAx" secondAttribute="trailing" id="7kG-lm-hlG"/>
                             <constraint firstAttribute="trailing" secondItem="Lbi-Xw-3gn" secondAttribute="trailing" constant="16" id="8tA-Za-gmM"/>
                             <constraint firstItem="Lbi-Xw-3gn" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="16" id="BVl-vP-S8l"/>
+                            <constraint firstAttribute="trailing" secondItem="GC3-VK-hLD" secondAttribute="trailing" id="Fxp-eq-iO6"/>
                             <constraint firstItem="Lbi-Xw-3gn" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="24" id="Gph-1K-y6N"/>
+                            <constraint firstItem="GC3-VK-hLD" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="HZC-pz-E9v"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="pcH-Dp-cAx" secondAttribute="bottom" id="IJb-PF-ZkC"/>
+                            <constraint firstAttribute="bottom" secondItem="GC3-VK-hLD" secondAttribute="bottom" id="M0A-Bs-0vQ"/>
                             <constraint firstItem="OTr-ko-fCe" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="OF3-0b-PdW"/>
-                            <constraint firstItem="pcH-Dp-cAx" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="VRx-fV-IBB"/>
+                            <constraint firstItem="pcH-Dp-cAx" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="jng-er-tfa"/>
                             <constraint firstAttribute="trailingMargin" secondItem="OTr-ko-fCe" secondAttribute="trailing" constant="16" id="ruh-4b-KjB"/>
                             <constraint firstItem="OTr-ko-fCe" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="t1N-fL-y6i"/>
                         </constraints>
@@ -154,6 +164,7 @@
                     </navigationItem>
                     <connections>
                         <outlet property="backBtnItem" destination="Vik-og-I4i" id="mn5-PJ-OwB"/>
+                        <outlet property="footer" destination="GC3-VK-hLD" id="o3x-o6-t3J"/>
                         <outlet property="networkError" destination="OTr-ko-fCe" id="Ap8-FY-bsw"/>
                         <outlet property="noMatchWarning" destination="Lbi-Xw-3gn" id="fVr-rK-poQ"/>
                         <outlet property="searchBtnItem" destination="UJA-q9-RM1" id="umN-rV-eHa"/>
@@ -212,18 +223,6 @@ professionals across industries.</string>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Cpi-R0-aYZ">
-                                <rect key="frame" x="16" y="28" width="62" height="22"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="62" id="uZN-O7-pf5"/>
-                                    <constraint firstAttribute="height" constant="22" id="xpB-6O-t1b"/>
-                                </constraints>
-                                <state key="normal" backgroundImage="back"/>
-                                <state key="focused" backgroundImage="back"/>
-                                <connections>
-                                    <action selector="tappedDoneBtn:" destination="cJd-Jx-SsT" eventType="touchUpInside" id="zid-6L-oII"/>
-                                </connections>
-                            </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="O22-l5-cBb">
                                 <rect key="frame" x="156" y="302" width="64" height="64"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -247,6 +246,18 @@ professionals across industries.</string>
                                     <action selector="tappedShareBtn:" destination="cJd-Jx-SsT" eventType="touchUpInside" id="7mT-Fa-8ub"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="center" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Cpi-R0-aYZ">
+                                <rect key="frame" x="0.0" y="20" width="94" height="38"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="94" id="uZN-O7-pf5"/>
+                                    <constraint firstAttribute="height" constant="38" id="xpB-6O-t1b"/>
+                                </constraints>
+                                <state key="normal" image="back"/>
+                                <state key="focused" backgroundImage="back"/>
+                                <connections>
+                                    <action selector="tappedDoneBtn:" destination="cJd-Jx-SsT" eventType="touchUpInside" id="zid-6L-oII"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -255,8 +266,8 @@ professionals across industries.</string>
                             <constraint firstItem="8Cw-Jk-X2y" firstAttribute="top" secondItem="iYB-yX-Ckh" secondAttribute="bottom" constant="24" id="Jbj-pN-RWx"/>
                             <constraint firstItem="gOm-o6-idi" firstAttribute="top" secondItem="kMV-uy-icx" secondAttribute="top" id="KCp-Ny-LlJ"/>
                             <constraint firstAttribute="trailing" secondItem="3hR-GQ-Fz5" secondAttribute="trailing" constant="8" id="KVp-61-VAC"/>
-                            <constraint firstItem="Cpi-R0-aYZ" firstAttribute="top" secondItem="jmj-B3-gLO" secondAttribute="bottom" constant="8" id="MEU-Ed-mwR"/>
-                            <constraint firstItem="Cpi-R0-aYZ" firstAttribute="leading" secondItem="kMV-uy-icx" secondAttribute="leading" constant="16" id="Nrd-Uv-S8g"/>
+                            <constraint firstItem="Cpi-R0-aYZ" firstAttribute="top" secondItem="jmj-B3-gLO" secondAttribute="bottom" id="MEU-Ed-mwR"/>
+                            <constraint firstItem="Cpi-R0-aYZ" firstAttribute="leading" secondItem="kMV-uy-icx" secondAttribute="leading" id="Nrd-Uv-S8g"/>
                             <constraint firstItem="O22-l5-cBb" firstAttribute="centerY" secondItem="kMV-uy-icx" secondAttribute="centerY" id="Q9E-MD-eyJ"/>
                             <constraint firstItem="1XV-Hw-jdH" firstAttribute="leading" secondItem="iYB-yX-Ckh" secondAttribute="leading" id="TO8-gx-C9B"/>
                             <constraint firstItem="iYB-yX-Ckh" firstAttribute="leading" secondItem="kMV-uy-icx" secondAttribute="leading" constant="16" id="bOe-5h-JZj"/>
@@ -368,6 +379,7 @@ professionals across industries.</string>
     <resources>
         <image name="back" width="61" height="21"/>
         <image name="backArrow" width="12" height="21"/>
+        <image name="footer" width="375" height="64"/>
         <image name="placeholder" width="375" height="134"/>
         <image name="play" width="60" height="60"/>
         <image name="share" width="64" height="64"/>
