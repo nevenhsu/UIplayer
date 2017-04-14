@@ -30,7 +30,6 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
     private var _jsonPath: String = "UIplayer/UIplayer.json"
     let firstDownloadTimes = 4
     var searching = false
-    var listHidden = true
     var isDownloading = false
 
     var jsonURL : URL {
@@ -78,9 +77,8 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
         noMatchWarning.isHidden = true
         networkError.isHidden = true
         footer.isHidden = true
-        isDownloading = false
+        
         navigationItem.leftBarButtonItem = nil
-        listHidden = true
         searching = false
         
         initListView()
@@ -92,6 +90,7 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
         refreshController.addTarget(self, action: #selector(self.refresh), for: .valueChanged)
         tableView.addSubview(refreshController)
         
+        isDownloading = false
         retriveJson(url: jsonURL)
         fetchItem(predicate: nil)
     }
@@ -137,9 +136,10 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
                     networkError.isHidden = true
                 }
                 
-            } else if section.numberOfObjects == 0  {
+            } else if section.numberOfObjects == 0 && !isDownloading  {
                 networkError.isHidden = false
                 noMatchWarning.isHidden = true
+                
             }else {
                 noMatchWarning.isHidden = true
                 networkError.isHidden = true
@@ -252,15 +252,19 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
             isDownloading = true
             let networkOperation = NetworkOperation(url: jsonURL)
             networkOperation.downloadJSON { (jsonDic) in
-                self.isDownloading = false
-                self.networkError.isHidden = true
+                
                 if let itemsDic = jsonDic["items"] as? [[String: AnyObject]]
                 {
+                    self.networkError.isHidden = true
                     self.itemsDic = itemsDic
                     for itemDic in itemsDic.prefix(upTo: self.firstDownloadTimes)
                     {
                         self.createItem(itemDic: itemDic, reCreate: true)
                     }
+                    self.isDownloading = false
+                } else {
+                    self.networkError.isHidden = false
+                    self.isDownloading = false
                 }
             }
         }
@@ -552,7 +556,6 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
             self.listTableVC.view.transform = CGAffineTransform(translationX: 0, y: 0)
         }, completion: { (finished) in
             self.listTableVC.didMove(toParentViewController: self)
-            self.listHidden = false
         })
     }
     
@@ -566,7 +569,6 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
         }) { (finished) in
             self.listTableVC.view.removeFromSuperview()
             self.tableView.isScrollEnabled = true
-            self.listHidden = true
         }
     }
     
