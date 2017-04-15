@@ -18,6 +18,7 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
     @IBOutlet weak var networkError: UIView!
     @IBOutlet weak var footer: UIImageView!
     
+    var networkOperation: NetworkOperation!
     var controller: NSFetchedResultsController<Item>!
     var searchController: SearchController!
     var searchBar: SearchBar!
@@ -80,6 +81,7 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
         
         navigationItem.leftBarButtonItem = nil
         searching = false
+        networkOperation = NetworkOperation(url: jsonURL)
         
         initListView()
         initSearchController()
@@ -91,7 +93,7 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
         tableView.addSubview(refreshController)
         
         isDownloading = false
-        retriveJson(url: jsonURL)
+        retriveJson()
         fetchItem(predicate: nil)
     }
     
@@ -136,7 +138,7 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
                     networkError.isHidden = true
                 }
                 
-            } else if section.numberOfObjects == 0 && !isDownloading  {
+            } else if section.numberOfObjects == 0 && networkOperation.fail {
                 networkError.isHidden = false
                 noMatchWarning.isHidden = true
                 
@@ -247,10 +249,10 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
         }
     }
     
-    func retriveJson(url: URL) -> Void {
+    func retriveJson() {
         if !isDownloading {
             isDownloading = true
-            let networkOperation = NetworkOperation(url: jsonURL)
+            
             networkOperation.downloadJSON { (jsonDic) in
                 
                 if let itemsDic = jsonDic["items"] as? [[String: AnyObject]]
@@ -262,6 +264,11 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
                         self.createItem(itemDic: itemDic, reCreate: true)
                     }
                     self.isDownloading = false
+                    
+                    if self.refreshController.isRefreshing {
+                        self.refreshController.endRefreshing()
+                    }
+                    
                 } else {
                     self.networkError.isHidden = false
                     self.isDownloading = false
@@ -274,26 +281,14 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
         if !searching {
             refreshController.beginRefreshing()
             
-            UIView.animate(withDuration: 0.25, delay: 0, options: UIViewAnimationOptions.beginFromCurrentState, animations: {
-                self.tableView.contentOffset = CGPoint(x: 0, y: -128)
-            }, completion: nil)
+            self.retriveJson()
+            self.fetchItem(predicate: nil)
             
-            self.retriveJson(url: jsonURL)
-            if refreshController.isRefreshing {
-                self.fetchItem(predicate: nil)
-            }
             tableView.reloadData()
-            refreshController.endRefreshing()
         } else {
+            refreshController.beginRefreshing()
             refreshController.endRefreshing()
-        }
-    }
-    
-    func toggleRefreshColor() {
-        if !searching {
-            refreshController.tintColor = UIColor.white
-        } else {
-            refreshController.tintColor = UIColor.clear
+            return
         }
     }
     
@@ -301,6 +296,7 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
         let fetchRequest: NSFetchRequest<Item> = NSFetchRequest(entityName: "Item")
         if let id = itemDic["id"]
         {
+            print(id)
             let idPredicate = NSPredicate(format: "id == %@", id as! CVarArg)
             fetchRequest.predicate = idPredicate
             
@@ -389,16 +385,17 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
         do {
             let data =  try Data(contentsOf: url)
             
+            switch itemProperty {
+            case "thumbnail":
+                item.thumbnail = UIImage(data: data)
+            case "cover":
+                item.cover = UIImage(data: data)
+            default:
+                return
+            }
+            
             DispatchQueue.main.async
-                {
-                switch itemProperty {
-                case "thumbnail":
-                    item.thumbnail = UIImage(data: data)
-                case "cover":
-                    item.cover = UIImage(data: data)
-                default:
-                    return
-                }
+            {
                 self.tableView.reloadData()
             }
         } catch let error as NSError {
@@ -420,7 +417,7 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
         searchController.dimsBackgroundDuringPresentation = false
         searchBar.becomeFirstResponder()
         showList()
-        toggleRefreshColor()
+        refreshController.tintColor = UIColor.clear
     }
     
     func hideKeyboard() {
@@ -463,6 +460,7 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
         tableView.reloadData()
         removeList()
         self.searching = false
+        refreshController.tintColor = UIColor.white
     }
     
     @IBAction func tappedBackArrowBtn(_ sender: UIBarButtonItem) {
