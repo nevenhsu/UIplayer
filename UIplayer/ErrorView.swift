@@ -1,25 +1,29 @@
 //
-//  MainVCBackground.swift
+//  ErrorView.swift
 //  UIplayer
 //
-//  Created by Neven Hsu on 01/03/2017.
+//  Created by Neven on 18/04/2017.
 //  Copyright © 2017 Neven. All rights reserved.
 //
 
 import UIKit
 
-class MainVCBackground: UIView {
+class ErrorView: UIView {
+    @IBOutlet weak var errorFrame: UIView!
+    
+
+    override func awakeFromNib() {
+        errorFrame.layer.cornerRadius = 4.0
+        errorFrame.clipsToBounds = true
+    }
+
     
     override func draw(_ rect: CGRect) {
-        setBackground()        
-    }
-    
-    func setBackground() {
         //// Color Declarations
-        let color1 = UIColor(red: 41/255, green: 21/255, blue: 74/255, alpha: 1.0).cgColor
-        let color2 = UIColor(red: 137/255, green: 57/255, blue: 120/255, alpha: 1.0).cgColor
-        let color3 = UIColor(red: 254/255, green: 126/255, blue: 146/255, alpha: 1.0).cgColor
-        let color4 = UIColor(red: 252/255, green: 151/255, blue: 140/255, alpha: 1.0).cgColor
+        let color1 = UIColor(red: 41/255, green: 21/255, blue: 74/255, alpha: 0.8).cgColor
+        let color2 = UIColor(red: 137/255, green: 57/255, blue: 120/255, alpha: 0.8).cgColor
+        let color3 = UIColor(red: 254/255, green: 126/255, blue: 146/255, alpha: 0.8).cgColor
+        let color4 = UIColor(red: 252/255, green: 151/255, blue: 140/255, alpha: 0.8).cgColor
         
         let context = UIGraphicsGetCurrentContext()
         
@@ -35,9 +39,11 @@ class MainVCBackground: UIView {
         context?.saveGState()
         backgroundPath.addClip()
         context?.drawLinearGradient(backgroundGradient!,
-                                    start: CGPoint(x: 160, y: -64),
-                                    end: CGPoint(x: 160, y: height - 64),
+                                    start: CGPoint(x: 160, y: 0),
+                                    end: CGPoint(x: 160, y: height),
                                     options: [.drawsBeforeStartLocation, .drawsAfterEndLocation])
         context?.restoreGState()
+
     }
+
 }

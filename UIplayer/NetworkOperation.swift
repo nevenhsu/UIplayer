@@ -19,7 +19,7 @@ class NetworkOperation {
         fail = false
     }
     
-    func downloadJSON(completion: @escaping ([String: AnyObject]) -> Void) {
+    func downloadJSON(completion: @escaping ([String: AnyObject]?) -> Void) {
         let resquest: URLRequest = URLRequest(url: queryURL)
         let dataTask = session.dataTask(with: resquest) { (data, response, error) in
             if let httpResponse = response as? HTTPURLResponse {
@@ -28,17 +28,21 @@ class NetworkOperation {
                     do {
                         let json = try JSONSerialization.jsonObject(with: data!, options: .allowFragments)
                         self.fail = false
-                        completion(json as! [String : AnyObject])
+                        completion(json as? [String : AnyObject])
                     } catch let error as NSError {
                         self.fail = true
-                        print(error.debugDescription)
+                        completion(nil)
+                        print("Download failed",error.debugDescription)
                     }
                 default:
                     self.fail = true
+                    completion(nil)
                     print("httpResponse is error: \(httpResponse.statusCode)")
                 }
             }
         }
+        self.fail = true
+        completion(nil)
         dataTask.resume()
     }
     

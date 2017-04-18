@@ -76,7 +76,7 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
         tableView.delegate = self
         tableView.dataSource = self
         noMatchWarning.isHidden = true
-        networkError.isHidden = true
+        networkError.isHidden = false
         footer.isHidden = true
         
         navigationItem.leftBarButtonItem = nil
@@ -142,12 +142,12 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
                 networkError.isHidden = false
                 noMatchWarning.isHidden = true
                 
-            }else {
+            } else {
                 noMatchWarning.isHidden = true
                 networkError.isHidden = true
+                
+                return section.numberOfObjects
             }
-            
-            return section.numberOfObjects
         }
         
         return 0
@@ -255,7 +255,7 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
             
             networkOperation.downloadJSON { (jsonDic) in
                 
-                if let itemsDic = jsonDic["items"] as? [[String: AnyObject]]
+                if let itemsDic = jsonDic?["items"] as? [[String: AnyObject]]
                 {
                     self.networkError.isHidden = true
                     self.itemsDic = itemsDic
@@ -270,8 +270,13 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
                     }
                     
                 } else {
+                    
                     self.networkError.isHidden = false
                     self.isDownloading = false
+                    
+                    if self.refreshController.isRefreshing {
+                        self.refreshController.endRefreshing()
+                    }
                 }
             }
         }
@@ -387,18 +392,33 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
             
             switch itemProperty {
             case "thumbnail":
-                item.thumbnail = UIImage(data: data)
+                if data != nil {
+                    item.thumbnail = UIImage(data: data)
+                    DispatchQueue.main.sync
+                        {
+                            self.tableView.reloadData()
+                    }
+                }
+                
             case "cover":
-                item.cover = UIImage(data: data)
+                if data != nil {
+                    item.cover = UIImage(data: data)
+                    DispatchQueue.main.sync
+                        {
+                            self.tableView.reloadData()
+                    }
+                }
+                
             default:
                 return
             }
             
-            DispatchQueue.main.async
-            {
-                self.tableView.reloadData()
-            }
         } catch let error as NSError {
+            DispatchQueue.main.sync {
+                if networkError.isHidden {
+                    networkError.isHidden = false
+                }
+            }
             print(error.debugDescription)
         }
     }
@@ -408,16 +428,22 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
         refresh()
     }
     
+    @IBAction func tappedCancelBtn(_ sender: UIButton) {
+        networkError.isHidden = true
+    }
+    
     @IBAction func tappedSearchBtn(_ sender: UIBarButtonItem) {
-        searching = true
-        navigationItem.titleView = searchBar
-        navigationItem.rightBarButtonItem = nil
-        navigationItem.leftBarButtonItem = backBtnItem
-        searchController.hidesNavigationBarDuringPresentation = false
-        searchController.dimsBackgroundDuringPresentation = false
-        searchBar.becomeFirstResponder()
-        showList()
-        refreshController.tintColor = UIColor.clear
+        if networkError.isHidden {
+            searching = true
+            navigationItem.titleView = searchBar
+            navigationItem.rightBarButtonItem = nil
+            navigationItem.leftBarButtonItem = backBtnItem
+            searchController.hidesNavigationBarDuringPresentation = false
+            searchController.dimsBackgroundDuringPresentation = false
+            searchBar.becomeFirstResponder()
+            showList()
+            refreshController.tintColor = UIColor.clear
+        }
     }
     
     func hideKeyboard() {
