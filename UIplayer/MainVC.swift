@@ -102,7 +102,7 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
         navigationController?.navigationBar.layer.isHidden = false
         navigationController?.navigationBar.layer.opacity = 0
         
-        UIView.animate(withDuration: 0.25, delay: 0, options: .curveEaseInOut, animations: {
+        UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseInOut, animations: {
             self.navigationController?.navigationBar.layer.opacity = 1
         }) { (finished) in
         }
@@ -114,7 +114,7 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
         mainStoryboard = UIStoryboard(name: "Main", bundle: nil)
         listTableVC = mainStoryboard.instantiateViewController(withIdentifier: "ListTableVC") as? ListTableVC
         listTableVC.delegate = self
-        listTableVC.tableView.frame = CGRect(x: 0, y: 0, width: tableView.frame.width, height: tableView.frame.height)
+        listTableVC.tableView.frame.offsetBy(dx: 0, dy: 0)
         listTableVC.tableView.sizeToFit()
     }
     
@@ -151,7 +151,7 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
                 }
                 
             } else if section.numberOfObjects == 0 && networkOperation.fail {
-                networkError.isHidden = false
+//                networkError.isHidden = false
                 noMatchWarning.isHidden = true
                 
             } else {
@@ -283,7 +283,10 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
                     
                 } else {
                     
-                    self.networkError.isHidden = false
+                    if self.networkOperation.fail {
+                        self.networkError.isHidden = false
+                    }
+                    
                     self.isDownloading = false
                     
                     if self.refreshController.isRefreshing {
@@ -313,6 +316,7 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
         let fetchRequest: NSFetchRequest<Item> = NSFetchRequest(entityName: "Item")
         if let id = itemDic["id"]
         {
+            networkError.isHidden = true
             print(id)
             let idPredicate = NSPredicate(format: "id == %@", id as! CVarArg)
             fetchRequest.predicate = idPredicate
@@ -401,7 +405,6 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
     func configImg(item: Item,itemProperty: String, url: URL) {
         do {
             let data =  try Data(contentsOf: url)
-            networkError.isHidden = true
             
             switch itemProperty {
             case "thumbnail":
@@ -415,11 +418,6 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
             }
             
         } catch let error as NSError {
-            DispatchQueue.main.sync {
-                if networkError.isHidden {
-                    networkError.isHidden = false
-                }
-            }
             print(error.debugDescription)
         }
     }

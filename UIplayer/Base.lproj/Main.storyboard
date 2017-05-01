@@ -374,7 +374,7 @@ professionals across industries.</string>
                     </connections>
                 </swipeGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="1671" y="127"/>
+            <point key="canvasLocation" x="912" y="157"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="3fg-by-NbE">

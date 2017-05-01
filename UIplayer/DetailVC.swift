@@ -74,7 +74,6 @@ class DetailVC: UIViewController,AVPlayerViewControllerDelegate {
     @IBAction func tappedDoneBtn(_ sender: UIButton) {
         navigationController?.popViewController(animated: true)
         self.dismiss(animated: true, completion: nil)
-        print("wow")
     }
 
     @IBAction func tappedShareBtn(_ sender: UIButton) {

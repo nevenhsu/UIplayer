@@ -63,7 +63,9 @@ class ListTableVC: UITableViewController {
     }
     
     @IBAction func swipeCancelSearch(_ sender: Any) {
-        delegate.cancelSearch()
+        //delegate.cancelSearch()
     }
+
+
 
 }
