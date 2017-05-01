@@ -76,7 +76,7 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
         tableView.delegate = self
         tableView.dataSource = self
         noMatchWarning.isHidden = true
-        networkError.isHidden = false
+        networkError.isHidden = true
         footer.isHidden = true
         
         navigationItem.leftBarButtonItem = nil
@@ -103,6 +103,7 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
         mainStoryboard = UIStoryboard(name: "Main", bundle: nil)
         listTableVC = mainStoryboard.instantiateViewController(withIdentifier: "ListTableVC") as? ListTableVC
         listTableVC.delegate = self
+        listTableVC.tableView.frame = CGRect(x: 0, y: 0, width: tableView.frame.width, height: tableView.frame.height)
         listTableVC.tableView.sizeToFit()
     }
     
@@ -392,21 +393,18 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
             
             switch itemProperty {
             case "thumbnail":
-                if data != nil {
-                    item.thumbnail = UIImage(data: data)
-                    DispatchQueue.main.sync
-                        {
-                            self.tableView.reloadData()
-                    }
+                item.thumbnail = UIImage(data: data)
+                DispatchQueue.main.sync
+                    {
+                        self.tableView.reloadData()
+
                 }
                 
             case "cover":
-                if data != nil {
-                    item.cover = UIImage(data: data)
-                    DispatchQueue.main.sync
-                        {
-                            self.tableView.reloadData()
-                    }
+                item.cover = UIImage(data: data)
+                DispatchQueue.main.sync
+                    {
+                        self.tableView.reloadData()
                 }
                 
             default:
