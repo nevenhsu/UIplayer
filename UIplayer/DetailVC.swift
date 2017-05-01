@@ -10,15 +10,13 @@ import UIKit
 import AVKit
 import AVFoundation
 
-class DetailVC: UIViewController,AVPlayerViewControllerDelegate,UIViewControllerTransitioningDelegate {
+class DetailVC: UIViewController,AVPlayerViewControllerDelegate {
     @IBOutlet weak var titleLbl: UILabel!
     @IBOutlet weak var infoLbl: UILabel!
     @IBOutlet weak var cover: UIImageView!
     private var _item: Item!
     var playerVC: AVPlayerViewController!
     var player: AVPlayer?
-    var dismissTransition: DismissTransition!
-    
     var item: Item {
         get {
             if _item != nil {
@@ -35,9 +33,8 @@ class DetailVC: UIViewController,AVPlayerViewControllerDelegate,UIViewController
     override func viewDidLoad() {
         super.viewDidLoad()
         playerVC = AVPlayerViewController()
-        dismissTransition = DismissTransition()
-        self.transitioningDelegate = self
         playerVC.delegate = self
+        navigationController?.navigationBar.layer.isHidden = true
         
         if let url = item.url {
             let videoUrl = URL(string: url)
@@ -73,14 +70,11 @@ class DetailVC: UIViewController,AVPlayerViewControllerDelegate,UIViewController
             self.player?.play()
         }
     }
-
-    @IBAction func swipeToDismiss(_ sender: UISwipeGestureRecognizer) {
-        dismiss(animated: true, completion: nil)
-    }
-
     
-    @IBAction func tappedDoneBtn(_ sender: Any) {
-        dismiss(animated: true, completion: nil)
+    @IBAction func tappedDoneBtn(_ sender: UIButton) {
+        navigationController?.popViewController(animated: true)
+        self.dismiss(animated: true, completion: nil)
+        print("wow")
     }
 
     @IBAction func tappedShareBtn(_ sender: UIButton) {
@@ -101,8 +95,5 @@ class DetailVC: UIViewController,AVPlayerViewControllerDelegate,UIViewController
         self.present(activityController, animated: true, completion: nil)
     }
     
-    func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        return dismissTransition
-    }
 
 }

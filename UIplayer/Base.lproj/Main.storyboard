@@ -95,7 +95,7 @@
                                     <constraint firstAttribute="trailing" secondItem="wFb-g2-Qn1" secondAttribute="trailing" constant="16" id="zn8-gN-DeY"/>
                                 </constraints>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="OTr-ko-fCe" customClass="ErrorView" customModule="UIplayer" customModuleProvider="target">
+                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="OTr-ko-fCe" customClass="ErrorView" customModule="UIplayer" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Uw9-1Q-nKB">
@@ -203,7 +203,7 @@
                         <outlet property="searchBtnItem" destination="UJA-q9-RM1" id="umN-rV-eHa"/>
                         <outlet property="searchDisplayController" destination="3De-9e-BEY" id="7r8-Na-8ry"/>
                         <outlet property="tableView" destination="pcH-Dp-cAx" id="t8W-bI-ON6"/>
-                        <segue destination="cJd-Jx-SsT" kind="custom" identifier="DetailVC" customClass="SegueFromRight" customModule="UIplayer" customModuleProvider="target" id="FbY-va-2SO"/>
+                        <segue destination="cJd-Jx-SsT" kind="show" identifier="DetailVC" id="FbY-va-2SO"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -234,9 +234,6 @@
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                                 <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                 <gestureRecognizers/>
-                                <connections>
-                                    <outletCollection property="gestureRecognizers" destination="obp-da-6nR" appends="YES" id="e3x-TT-Suf"/>
-                                </connections>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iYB-yX-Ckh">
                                 <rect key="frame" x="16" y="669" width="220" height="43"/>
@@ -320,13 +317,8 @@ professionals across industries.</string>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="diV-j9-tcz" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <swipeGestureRecognizer direction="right" id="obp-da-6nR">
-                    <connections>
-                        <action selector="swipeToDismiss:" destination="cJd-Jx-SsT" id="b9X-hX-zKC"/>
-                    </connections>
-                </swipeGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="1717.5999999999999" y="-561.76911544227892"/>
+            <point key="canvasLocation" x="1672" y="-563"/>
         </scene>
         <!--List TableVC-->
         <scene sceneID="i4a-Sb-hp6">
@@ -382,7 +374,7 @@ professionals across industries.</string>
                     </connections>
                 </swipeGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="2498" y="-563"/>
+            <point key="canvasLocation" x="1671" y="127"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="3fg-by-NbE">

@@ -9,7 +9,7 @@
 import UIKit
 import CoreData
 
-class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetchedResultsControllerDelegate, UISearchBarDelegate, UISearchControllerDelegate, ListTableViewControllerDelegate  {
+class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetchedResultsControllerDelegate, UISearchBarDelegate, UISearchControllerDelegate, ListTableViewControllerDelegate {
     
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet var backBtnItem: UIBarButtonItem!
@@ -29,7 +29,7 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
     private var _newIndex: Int!
     private var _baseURL = URL(string: "http://nevenhsu.ml/")
     private var _jsonPath: String = "UIplayer/UIplayer.json"
-    let firstDownloadTimes = 4
+    let firstDownloadTimes = 3
     var searching = false
     var isDownloading = false
 
@@ -95,6 +95,17 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
         isDownloading = false
         retriveJson()
         fetchItem(predicate: nil)
+    }
+    
+    
+    override func viewWillAppear(_ animated: Bool) {
+        navigationController?.navigationBar.layer.isHidden = false
+        navigationController?.navigationBar.layer.opacity = 0
+        
+        UIView.animate(withDuration: 0.25, delay: 0, options: .curveEaseInOut, animations: {
+            self.navigationController?.navigationBar.layer.opacity = 1
+        }) { (finished) in
+        }
     }
     
     
@@ -390,22 +401,14 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
     func configImg(item: Item,itemProperty: String, url: URL) {
         do {
             let data =  try Data(contentsOf: url)
+            networkError.isHidden = true
             
             switch itemProperty {
             case "thumbnail":
                 item.thumbnail = UIImage(data: data)
-                DispatchQueue.main.sync
-                    {
-                        self.tableView.reloadData()
-
-                }
                 
             case "cover":
                 item.cover = UIImage(data: data)
-                DispatchQueue.main.sync
-                    {
-                        self.tableView.reloadData()
-                }
                 
             default:
                 return
@@ -420,7 +423,6 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
             print(error.debugDescription)
         }
     }
-    
     
     @IBAction func tappedTryAgainBtn(_ sender: UIButton) {
         refresh()
