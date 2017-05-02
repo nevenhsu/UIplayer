@@ -25,6 +25,9 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
     var refreshController: UIRefreshControl!
     var mainStoryboard:UIStoryboard!
     var listTableVC: ListTableVC!
+    var context: NSManagedObjectContext!
+    let ad = UIApplication.shared.delegate as! AppDelegate
+    let privateMOC = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
     private var _itemsDic: [[String: AnyObject]]!
     private var _newIndex: Int!
     private var _baseURL = URL(string: "http://nevenhsu.ml/")
@@ -73,6 +76,8 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        context = ad.persistentContainer.viewContext
+        privateMOC.parent = context
         tableView.delegate = self
         tableView.dataSource = self
         noMatchWarning.isHidden = true
@@ -126,8 +131,6 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
         searchController.costomSearchBar.delegate = self
         searchBar.sizeToFit()
     }
-    
-    
     
     func numberOfSections(in tableView: UITableView) -> Int {
         if let sections = controller.sections {
@@ -185,7 +188,9 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
         if let objs = controller.fetchedObjects, objs.count > 0
         {
             let item = objs[indexPath.row]
+            
             performSegue(withIdentifier: "DetailVC", sender: item)
+            
         }
     }
     
@@ -340,63 +345,67 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
     }
     
     func configItem(item: Item, itemDic: [String: AnyObject]) {
-        if let id = itemDic["id"] as? Int16{
-            item.id = id
-        }
         
-        if let catagory = itemDic["category"] as? String {
-            item.category = catagory
-        }
+        privateMOC.perform {
         
-        if let title = itemDic["title"] as? String {
-            item.title = title
-        }
-        
-        if let info = itemDic["info"] as? String {
-            item.info = info
-        }
-        
-        if let url = itemDic["url"] as? String {
-            item.url = url
-        }
-        
-        if let duration = itemDic["duration"] as? Int16 {
-            item.duration = duration
-        }
-        
-        if let thumbnail = itemDic["thumbnail"] as? String {
-            DispatchQueue.global().async
-            {
-                let url = URL(string: thumbnail)!
-                self.configImg(item: item, itemProperty: "thumbnail", url: url)
+            if let id = itemDic["id"] as? Int16{
+                item.id = id
             }
-        }
-        
-        if let cover = itemDic["cover"] as? String {
-            DispatchQueue.global().async
-            {
-                let url = URL(string: cover)!
-                self.configImg(item: item, itemProperty: "cover", url: url)
-            }
-        }
-        
-        if let tags = itemDic["tags"] as? [String] {
-            let fetchRequest: NSFetchRequest<Tag> = NSFetchRequest(entityName: "Tag")
             
-            for tag in tags {
-                let tagPredicate = NSPredicate(format: "name == %@", tag)
-                fetchRequest.predicate = tagPredicate
-                do {
-                    let result = try context.fetch(fetchRequest)
-                    if let tagEntity = result.first {
-                        item.addToTags(tagEntity)
-                    } else {
-                        let newTag = Tag(context: context)
-                        newTag.name = tag
-                        item.addToTags(newTag)
+            if let catagory = itemDic["category"] as? String {
+                item.category = catagory
+            }
+            
+            if let title = itemDic["title"] as? String {
+                item.title = title
+            }
+            
+            if let info = itemDic["info"] as? String {
+                item.info = info
+            }
+            
+            if let url = itemDic["url"] as? String {
+                item.url = url
+            }
+            
+            if let duration = itemDic["duration"] as? Int16 {
+                item.duration = duration
+            }
+            
+            if let thumbnail = itemDic["thumbnail"] as? String {
+                DispatchQueue.global().async
+                {
+                    let url = URL(string: thumbnail)!
+                    self.configImg(item: item, itemProperty: "thumbnail", url: url)
+                }
+            }
+            
+            if let cover = itemDic["cover"] as? String {
+                DispatchQueue.global().async
+                {
+                    let url = URL(string: cover)!
+                    self.configImg(item: item, itemProperty: "cover", url: url)
+                }
+            }
+            
+            if let tags = itemDic["tags"] as? [String] {
+                let fetchRequest: NSFetchRequest<Tag> = NSFetchRequest(entityName: "Tag")
+                
+                for tag in tags {
+                    let tagPredicate = NSPredicate(format: "name == %@", tag)
+                    fetchRequest.predicate = tagPredicate
+                    do {
+                        let result = try self.privateMOC.fetch(fetchRequest)
+                        if let tagEntity = result.first {
+                            item.addToTags(tagEntity)
+                        } else {
+                            let newTag = Tag(context: self.privateMOC)
+                            newTag.name = tag
+                            item.addToTags(newTag)
+                        }
+                    } catch let err as NSError {
+                        print(err.debugDescription)
                     }
-                } catch let err as NSError {
-                    print(err.debugDescription)
                 }
             }
         }

@@ -19,22 +19,18 @@ class DetailVC: UIViewController,AVPlayerViewControllerDelegate {
     var player: AVPlayer?
     var item: Item {
         get {
-            if _item != nil {
-                return _item
-            } else {
-                return Item(context: context)
-            }
+            return _item
         }
         set {
             _item = newValue
         }
     }
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         playerVC = AVPlayerViewController()
         playerVC.delegate = self
-        navigationController?.navigationBar.layer.isHidden = true
         
         if let url = item.url {
             let videoUrl = URL(string: url)
@@ -55,15 +51,24 @@ class DetailVC: UIViewController,AVPlayerViewControllerDelegate {
 
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        navigationController?.navigationBar.layer.isHidden = true
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        navigationController?.navigationBar.layer.isHidden = true
+    }
+    
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
     }
     
     @IBAction func playVideoBtn(_ sender: Any) {
         playerVC.player = player
-        self.present(playerVC, animated: true) { 
-            self.player?.play()
-        }
+        
+        navigationController?.pushViewController(playerVC, animated: true)
+        self.player?.play()
+
         
         NotificationCenter.default.addObserver(forName: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: player?.currentItem, queue: nil) { (notification) in
             self.player?.seek(to: kCMTimeZero)
@@ -94,5 +99,9 @@ class DetailVC: UIViewController,AVPlayerViewControllerDelegate {
         self.present(activityController, animated: true, completion: nil)
     }
     
+    
+    func dissmissPlayerVC() {
+        
+    }
 
 }
