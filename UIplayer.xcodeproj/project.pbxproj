@@ -28,6 +28,7 @@
 		0BDE71521E67080E00E71B65 /* MainVCBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BDE71511E67080E00E71B65 /* MainVCBackground.swift */; };
 		0BDE71541E67091700E71B65 /* SearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BDE71531E67091700E71B65 /* SearchBar.swift */; };
 		0BDE71561E67103600E71B65 /* SearchController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BDE71551E67103600E71B65 /* SearchController.swift */; };
+		0BF479461EBA22990074CC4F /* JsonPlist.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0BF479451EBA22990074CC4F /* JsonPlist.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -54,6 +55,7 @@
 		0BDE71511E67080E00E71B65 /* MainVCBackground.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainVCBackground.swift; sourceTree = "<group>"; };
 		0BDE71531E67091700E71B65 /* SearchBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchBar.swift; sourceTree = "<group>"; };
 		0BDE71551E67103600E71B65 /* SearchController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchController.swift; sourceTree = "<group>"; };
+		0BF479451EBA22990074CC4F /* JsonPlist.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = JsonPlist.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -106,6 +108,7 @@
 				0BAB7D6A1E584C4800B2B798 /* Tag+CoreDataClass.swift */,
 				0B36665E1E534C2F0068C452 /* Generated */,
 				0B13A0151E5761BC00CA9498 /* NetworkOperation.swift */,
+				0BF479451EBA22990074CC4F /* JsonPlist.plist */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -207,6 +210,7 @@
 				0B3666521E533BC70068C452 /* LaunchScreen.storyboard in Resources */,
 				0B36664F1E533BC70068C452 /* Assets.xcassets in Resources */,
 				0B36664A1E533BC60068C452 /* Main.storyboard in Resources */,
+				0BF479461EBA22990074CC4F /* JsonPlist.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

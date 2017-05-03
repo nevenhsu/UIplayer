@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import SystemConfiguration
 
 class NetworkOperation {
     let queryURL: URL!
@@ -19,21 +20,16 @@ class NetworkOperation {
         fail = false
     }
     
-    func downloadJSON(completion: @escaping ([String: AnyObject]?) -> Void) {
+    func downloadJSON(completion: @escaping (Data?) -> Void) {
+        
         let resquest: URLRequest = URLRequest(url: queryURL)
         let dataTask = session.dataTask(with: resquest) { (data, response, error) in
             if let httpResponse = response as? HTTPURLResponse {
                 switch httpResponse.statusCode {
                 case 200:
-                    do {
-                        let json = try JSONSerialization.jsonObject(with: data!, options: .allowFragments)
-                        self.fail = false
-                        completion(json as? [String : AnyObject])
-                    } catch let error as NSError {
-                        self.fail = true
-                        completion(nil)
-                        print("Download failed",error.debugDescription)
-                    }
+                    self.fail = false
+                    completion(data)
+                    
                 default:
                     self.fail = true
                     completion(nil)
@@ -41,9 +37,32 @@ class NetworkOperation {
                 }
             }
         }
-        self.fail = true
-        completion(nil)
         dataTask.resume()
+    }
+    
+    func connectedToNetwork() -> Bool {
+        
+        var zeroAddress = sockaddr_in()
+        zeroAddress.sin_len = UInt8(MemoryLayout<sockaddr_in>.size)
+        zeroAddress.sin_family = sa_family_t(AF_INET)
+        
+        guard let defaultRouteReachability = withUnsafePointer(to: &zeroAddress, {
+            $0.withMemoryRebound(to: sockaddr.self, capacity: 1) {
+                SCNetworkReachabilityCreateWithAddress(nil, $0)
+            }
+        }) else {
+            return false
+        }
+        
+        var flags: SCNetworkReachabilityFlags = []
+        if !SCNetworkReachabilityGetFlags(defaultRouteReachability, &flags) {
+            return false
+        }
+        
+        let isReachable = flags.contains(.reachable)
+        let needsConnection = flags.contains(.connectionRequired)
+        
+        return (isReachable && !needsConnection)
     }
     
 }

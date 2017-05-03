@@ -28,11 +28,15 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
     var context: NSManagedObjectContext!
     let ad = UIApplication.shared.delegate as! AppDelegate
     let privateMOC = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
+    
+    let plistPath:String? = Bundle.main.path(forResource: "JsonPlist", ofType: "plist")!
+    var _jsonUpdateTime: String!
+    
     private var _itemsDic: [[String: AnyObject]]!
     private var _newIndex: Int!
     private var _baseURL = URL(string: "http://nevenhsu.ml/")
     private var _jsonPath: String = "UIplayer/UIplayer.json"
-    let firstDownloadTimes = 3
+    let firstDownloadTimes: Int = 5
     var searching = false
     var isDownloading = false
 
@@ -66,13 +70,32 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
         set {
             if newValue > newIndex {
                 _newIndex = newValue
-                let newItemIndex = newValue + firstDownloadTimes
+                var newItemIndex = newValue + firstDownloadTimes
+                newItemIndex -= 1
                 if newItemIndex < itemsDic.count {
                     self.createItem(itemDic: itemsDic[newItemIndex],reCreate: true)
+                    
+                    print("newItemIndex",newItemIndex)
+                    
                 }
             }
         }
     }
+    
+    var jsonUpdateTime: String {
+        get {
+            if _jsonUpdateTime != nil {
+                return _jsonUpdateTime
+            } else {
+                return "-1"
+            }
+        }
+        
+        set {
+            _jsonUpdateTime = newValue
+        }
+    }
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -112,7 +135,6 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
         }) { (finished) in
         }
     }
-    
     
     func initListView() {
         //Instantiate ListTableView
@@ -154,13 +176,11 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
                 }
                 
             } else if section.numberOfObjects == 0 && networkOperation.fail {
-//                networkError.isHidden = false
+                networkError.isHidden = false
                 noMatchWarning.isHidden = true
                 
             } else {
-                noMatchWarning.isHidden = true
-                networkError.isHidden = true
-                
+                noMatchWarning.isHidden = true                
                 return section.numberOfObjects
             }
         }
@@ -176,6 +196,7 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
         let cell = tableView.dequeueReusableCell(withIdentifier: "itemCell", for: indexPath) as! ItemCell
         configCell(cell: cell, indexPath: indexPath)
         newIndex = indexPath.row
+        print("indexPath.row", newIndex)
         return cell
     }
     
@@ -190,7 +211,6 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
             let item = objs[indexPath.row]
             
             performSegue(withIdentifier: "DetailVC", sender: item)
-            
         }
     }
     
@@ -220,7 +240,7 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
         controller.delegate = self
         self.controller = controller
         
-        self._newIndex = 0
+//        self._newIndex = 0
         
         do {
             try controller.performFetch()
@@ -270,46 +290,100 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
         if !isDownloading {
             isDownloading = true
             
-            networkOperation.downloadJSON { (jsonDic) in
-                
-                if let itemsDic = jsonDic?["items"] as? [[String: AnyObject]]
-                {
-                    self.networkError.isHidden = true
-                    self.itemsDic = itemsDic
-                    for itemDic in itemsDic.prefix(upTo: self.firstDownloadTimes)
+            if networkOperation.connectedToNetwork() {
+                networkOperation.downloadJSON { (data) in
+                    
+                    if let jsonData = data
                     {
-                        self.createItem(itemDic: itemDic, reCreate: true)
-                    }
-                    self.isDownloading = false
-                    
-                    if self.refreshController.isRefreshing {
-                        self.refreshController.endRefreshing()
-                    }
-                    
-                } else {
-                    
-                    if self.networkOperation.fail {
+                        self.networkError.isHidden = true
+                        self.json2CreateItem(data: jsonData)
+                    } else {
                         self.networkError.isHidden = false
                     }
                     
                     self.isDownloading = false
-                    
-                    if self.refreshController.isRefreshing {
-                        self.refreshController.endRefreshing()
-                    }
+                }
+            } else {
+                networkOperation.fail = true
+                
+                if let jsonData = self.readJsonPlist() {
+                    self.json2CreateItem(data: jsonData)
+                }
+                
+                if self.networkOperation.fail {
+                    self.networkError.isHidden = false
+                }
+                
+                self.isDownloading = false
+            }
+            
+            if self.refreshController.isRefreshing {
+                self.refreshController.endRefreshing()
+            }
+        }
+    }
+    
+    func json2CreateItem(data: Data) {
+        if let jsonDic = self.jsonSerialization(data: data) {
+            
+            let updatedTime = jsonDic["updated"] as! String
+            
+            if updatedTime != self.jsonUpdateTime {
+                
+                self.updateJsonPlist(newData: data as Data)
+                self.jsonUpdateTime = updatedTime
+                
+                self.itemsDic = jsonDic["items"] as! [[String : AnyObject]]
+                
+                for itemDic in self.itemsDic.prefix(upTo: self.firstDownloadTimes)
+                {
+                    self.createItem(itemDic: itemDic, reCreate: true)
                 }
             }
+        }
+    }
+    
+    func updateJsonPlist(newData: Data) {
+        if let path = plistPath {
+            let plist = NSMutableDictionary(contentsOfFile: path)
+            plist?["json"] = newData
+            plist?.write(toFile: path, atomically: true)
+            print("update plist successfully")
+        } else {
+            print("update plist error")
+        }
+    }
+    
+    func readJsonPlist() -> Data? {
+        if let path = plistPath {
+            let plist = NSDictionary(contentsOfFile: path)
+            print("read plist successfully")
+            return plist?["json"] as! Data?
+        } else {
+            print("read plist error")
+            return nil
+        }
+    }
+    
+    func jsonSerialization(data: Data?) -> [String:AnyObject]? {
+        do{
+            if let dataDic = data {
+                let jsonDic = try JSONSerialization.jsonObject(with: dataDic, options: .allowFragments)
+                return jsonDic as? [String:AnyObject]
+            }
+            return nil
+        }
+        catch{
+            print("Error reading plist: \(error)")
+            return nil
         }
     }
     
     func refresh() {
         if !searching {
             refreshController.beginRefreshing()
-            
             self.retriveJson()
             self.fetchItem(predicate: nil)
-            
-            tableView.reloadData()
         } else {
             refreshController.beginRefreshing()
             refreshController.endRefreshing()
@@ -321,7 +395,6 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
         let fetchRequest: NSFetchRequest<Item> = NSFetchRequest(entityName: "Item")
         if let id = itemDic["id"]
         {
-            networkError.isHidden = true
             print(id)
             let idPredicate = NSPredicate(format: "id == %@", id as! CVarArg)
             fetchRequest.predicate = idPredicate
@@ -338,6 +411,7 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
                     let newItem = Item(context: context)
                     self.configItem(item: newItem, itemDic: itemDic)
                 }
+                
             } catch let error as NSError {
                 print(error.debugDescription)
             }
