@@ -13,11 +13,9 @@ class NetworkOperation {
     let queryURL: URL!
     lazy var config: URLSessionConfiguration = URLSessionConfiguration.default
     lazy var session: URLSession = URLSession(configuration: self.config)
-    var fail: Bool
     
     init(url: URL) {
         queryURL = url
-        fail = false
     }
     
     func downloadJSON(completion: @escaping (Data?) -> Void) {
@@ -27,11 +25,9 @@ class NetworkOperation {
             if let httpResponse = response as? HTTPURLResponse {
                 switch httpResponse.statusCode {
                 case 200:
-                    self.fail = false
                     completion(data)
                     
                 default:
-                    self.fail = true
                     completion(nil)
                     print("httpResponse is error: \(httpResponse.statusCode)")
                 }
@@ -40,7 +36,7 @@ class NetworkOperation {
         dataTask.resume()
     }
     
-    func connectedToNetwork() -> Bool {
+    func checkNetworkConnection() -> Bool {
         
         var zeroAddress = sockaddr_in()
         zeroAddress.sin_len = UInt8(MemoryLayout<sockaddr_in>.size)
@@ -64,5 +60,5 @@ class NetworkOperation {
         
         return (isReachable && !needsConnection)
     }
-    
+
 }

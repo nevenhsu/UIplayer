@@ -39,6 +39,8 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
     let firstDownloadTimes: Int = 5
     var searching = false
     var isDownloading = false
+    var recreate = false
+    var _isNetworkConneting: Bool = false
 
     var jsonURL : URL {
         get {
@@ -73,7 +75,9 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
                 var newItemIndex = newValue + firstDownloadTimes
                 newItemIndex -= 1
                 if newItemIndex < itemsDic.count {
-                    self.createItem(itemDic: itemsDic[newItemIndex],reCreate: true)
+                    
+                    
+                    self.createItem(itemDic: itemsDic[newItemIndex],reCreate: recreate)
                     
                     print("newItemIndex",newItemIndex)
                     
@@ -96,19 +100,37 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
         }
     }
     
+    var isNetworkConneting: Bool {
+        get {
+            return _isNetworkConneting
+        }
+        
+        set {
+            if newValue {
+                networkError.isHidden = true
+                _isNetworkConneting = newValue
+            } else {
+                networkError.isHidden = false
+                _isNetworkConneting = newValue
+            }
+        }
+    }
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         context = ad.persistentContainer.viewContext
         privateMOC.parent = context
+        
         tableView.delegate = self
         tableView.dataSource = self
-        noMatchWarning.isHidden = true
-        networkError.isHidden = true
-        footer.isHidden = true
         
-        navigationItem.leftBarButtonItem = nil
+        noMatchWarning.isHidden = true
+        footer.isHidden = true
         searching = false
+        isDownloading = false
+        navigationItem.leftBarButtonItem = nil
+        
         networkOperation = NetworkOperation(url: jsonURL)
         
         initListView()
@@ -120,7 +142,6 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
         refreshController.addTarget(self, action: #selector(self.refresh), for: .valueChanged)
         tableView.addSubview(refreshController)
         
-        isDownloading = false
         retriveJson()
         fetchItem(predicate: nil)
     }
@@ -169,18 +190,12 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
                 
                 if let searchText = searchBar.text, searchText.characters.count > 0 {
                     noMatchWarning.isHidden = false
-                    networkError.isHidden = true
                 } else {
                     noMatchWarning.isHidden = true
-                    networkError.isHidden = true
                 }
                 
-            } else if section.numberOfObjects == 0 && networkOperation.fail {
-                networkError.isHidden = false
+            }  else {
                 noMatchWarning.isHidden = true
-                
-            } else {
-                noMatchWarning.isHidden = true                
                 return section.numberOfObjects
             }
         }
@@ -196,7 +211,6 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
         let cell = tableView.dequeueReusableCell(withIdentifier: "itemCell", for: indexPath) as! ItemCell
         configCell(cell: cell, indexPath: indexPath)
         newIndex = indexPath.row
-        print("indexPath.row", newIndex)
         return cell
     }
     
@@ -209,7 +223,6 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
         if let objs = controller.fetchedObjects, objs.count > 0
         {
             let item = objs[indexPath.row]
-            
             performSegue(withIdentifier: "DetailVC", sender: item)
         }
     }
@@ -239,8 +252,6 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
         let controller = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: context, sectionNameKeyPath: nil, cacheName: nil)
         controller.delegate = self
         self.controller = controller
-        
-//        self._newIndex = 0
         
         do {
             try controller.performFetch()
@@ -290,30 +301,22 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
         if !isDownloading {
             isDownloading = true
             
-            if networkOperation.connectedToNetwork() {
+            isNetworkConneting = networkOperation.checkNetworkConnection()
+            
+            if isNetworkConneting {
                 networkOperation.downloadJSON { (data) in
                     
-                    if let jsonData = data
-                    {
-                        self.networkError.isHidden = true
+                    if let jsonData = data {
                         self.json2CreateItem(data: jsonData)
-                    } else {
-                        self.networkError.isHidden = false
                     }
                     
                     self.isDownloading = false
                 }
             } else {
-                networkOperation.fail = true
-                
+
                 if let jsonData = self.readJsonPlist() {
                     self.json2CreateItem(data: jsonData)
                 }
-                
-                if self.networkOperation.fail {
-                    self.networkError.isHidden = false
-                }
-                
                 self.isDownloading = false
             }
             
@@ -329,6 +332,7 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
             let updatedTime = jsonDic["updated"] as! String
             
             if updatedTime != self.jsonUpdateTime {
+                self.recreate = true
                 
                 self.updateJsonPlist(newData: data as Data)
                 self.jsonUpdateTime = updatedTime
@@ -337,8 +341,10 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
                 
                 for itemDic in self.itemsDic.prefix(upTo: self.firstDownloadTimes)
                 {
-                    self.createItem(itemDic: itemDic, reCreate: true)
+                    self.createItem(itemDic: itemDic, reCreate: recreate)
                 }
+            } else {
+                self.recreate = false
             }
         }
     }
@@ -395,7 +401,6 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
         let fetchRequest: NSFetchRequest<Item> = NSFetchRequest(entityName: "Item")
         if let id = itemDic["id"]
         {
-            print(id)
             let idPredicate = NSPredicate(format: "id == %@", id as! CVarArg)
             fetchRequest.predicate = idPredicate
             
@@ -405,8 +410,15 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
                 {
                     if reCreate
                     {
-                       self.configItem(item: item, itemDic: itemDic)
+                        self.configItem(item: item, itemDic: itemDic)
+                        return
                     }
+                    
+                    if item.cover == nil || item.thumbnail == nil {
+                        self.configItem(item: item, itemDic: itemDic)
+                        return
+                    }
+                    
                 } else {
                     let newItem = Item(context: context)
                     self.configItem(item: newItem, itemDic: itemDic)
@@ -597,11 +609,11 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
             for itemDic in itemsDic {
                 if let title = itemDic["title"] as? String, title.range(of:searchText, options: .caseInsensitive) != nil
                 {
-                    self.createItem(itemDic: itemDic,reCreate: false)
+                    self.createItem(itemDic: itemDic,reCreate: recreate)
                 }
                 if let catagory = itemDic["category"] as? String, catagory.range(of:searchText, options: .caseInsensitive) != nil
                 {
-                    self.createItem(itemDic: itemDic,reCreate: false)
+                    self.createItem(itemDic: itemDic,reCreate: recreate)
                 }
             }
             let predicate = NSPredicate(format: "(title contains [cd] %@) || (ANY tags.name contains[cd] %@) || (category contains [cd] %@)", searchText, searchText,searchText)
@@ -677,5 +689,6 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
         }
     }
     
+        
 }
 

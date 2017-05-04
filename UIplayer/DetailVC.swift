@@ -9,6 +9,7 @@
 import UIKit
 import AVKit
 import AVFoundation
+import Social
 
 class DetailVC: UIViewController,AVPlayerViewControllerDelegate {
     @IBOutlet weak var titleLbl: UILabel!
@@ -39,10 +40,14 @@ class DetailVC: UIViewController,AVPlayerViewControllerDelegate {
 
         if let title = item.title {
             titleLbl.text = title
+        } else {
+            titleLbl.text = "Error, please try again."
         }
 
         if let info = item.info {
             infoLbl.text = info
+        } else {
+            infoLbl.text = ""
         }
         
         if let coverImg = item.cover as? UIImage {
@@ -66,8 +71,9 @@ class DetailVC: UIViewController,AVPlayerViewControllerDelegate {
     @IBAction func playVideoBtn(_ sender: Any) {
         playerVC.player = player
         
-        navigationController?.pushViewController(playerVC, animated: true)
-        self.player?.play()
+        navigationController?.present(playerVC, animated: true, completion: { 
+            self.player?.play()
+        })
 
         
         NotificationCenter.default.addObserver(forName: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: player?.currentItem, queue: nil) { (notification) in
@@ -82,20 +88,19 @@ class DetailVC: UIViewController,AVPlayerViewControllerDelegate {
     }
 
     @IBAction func tappedShareBtn(_ sender: UIButton) {
-        var shareInfo: String
+        let shareInfo = "\(titleLbl.text!)\n\(infoLbl.text!)\n\nfrom Motion UI iOS App\n\n"
         var activityController: UIActivityViewController
-        if let videoURL = item.url {
-            shareInfo = "Check out this great UI animation!\n" + videoURL
-        } else {
-            shareInfo = "Check out this great UI animation!\n"
-        }
         
-        if let img = item.cover as? UIImage {
-            activityController = UIActivityViewController(activityItems: [shareInfo,img], applicationActivities: nil)
+        if let img = cover.image,
+            let videoURL = item.url {
+            activityController = UIActivityViewController(activityItems: [img,shareInfo,videoURL], applicationActivities: nil)
         } else {
             activityController = UIActivityViewController(activityItems: [shareInfo], applicationActivities: nil)
         }
         
+        activityController.excludedActivityTypes = [UIActivityType.print, UIActivityType.copyToPasteboard, UIActivityType.addToReadingList, UIActivityType.postToVimeo]
+        
+        activityController.popoverPresentationController?.sourceView = self.view
         self.present(activityController, animated: true, completion: nil)
     }
     
