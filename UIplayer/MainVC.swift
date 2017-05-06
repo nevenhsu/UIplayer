@@ -27,7 +27,6 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
     var listTableVC: ListTableVC!
     var context: NSManagedObjectContext!
     let ad = UIApplication.shared.delegate as! AppDelegate
-    let privateMOC = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
     
     let plistPath:String? = Bundle.main.path(forResource: "JsonPlist", ofType: "plist")!
     var _jsonUpdateTime: String!
@@ -120,8 +119,7 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
     override func viewDidLoad() {
         super.viewDidLoad()
         context = ad.persistentContainer.viewContext
-        privateMOC.parent = context
-        
+
         tableView.delegate = self
         tableView.dataSource = self
         
@@ -441,7 +439,7 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
     
     func configItem(item: Item, itemDic: [String: AnyObject]) {
         
-        privateMOC.perform {
+        context.perform {
         
             if let id = itemDic["id"] as? Int16{
                 item.id = id
@@ -490,11 +488,11 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
                     let tagPredicate = NSPredicate(format: "name == %@", tag)
                     fetchRequest.predicate = tagPredicate
                     do {
-                        let result = try self.privateMOC.fetch(fetchRequest)
+                        let result = try self.context.fetch(fetchRequest)
                         if let tagEntity = result.first {
                             item.addToTags(tagEntity)
                         } else {
-                            let newTag = Tag(context: self.privateMOC)
+                            let newTag = Tag(context: self.context)
                             newTag.name = tag
                             item.addToTags(newTag)
                         }
