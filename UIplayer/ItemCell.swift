@@ -31,6 +31,11 @@ class ItemCell: UITableViewCell {
     func updateCell(item: Item) {
         titleLbl.text = item.title
         catagoryLbl.text = item.category
-        thumbnail.image = item.thumbnail as? UIImage
+        
+        if let image = item.thumbnail as? UIImage {
+            thumbnail.image = image
+        } else {
+            thumbnail.image = UIImage(named: "placeholder")
+        }
     }
 }

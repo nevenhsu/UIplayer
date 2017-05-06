@@ -125,6 +125,12 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
         tableView.delegate = self
         tableView.dataSource = self
         
+        if let path = plistPath,
+            let plist = NSDictionary(contentsOfFile: path) as? [String: AnyObject],
+            let time = plist["updated"] as? String {
+            self.jsonUpdateTime = time
+        }
+        
         noMatchWarning.isHidden = true
         footer.isHidden = true
         searching = false
@@ -328,16 +334,13 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
     
     func json2CreateItem(data: Data) {
         if let jsonDic = self.jsonSerialization(data: data) {
-            
+            self.itemsDic = jsonDic["items"] as! [[String : AnyObject]]
             let updatedTime = jsonDic["updated"] as! String
             
             if updatedTime != self.jsonUpdateTime {
                 self.recreate = true
-                
-                self.updateJsonPlist(newData: data as Data)
                 self.jsonUpdateTime = updatedTime
-                
-                self.itemsDic = jsonDic["items"] as! [[String : AnyObject]]
+                self.updateJsonPlist(newData: data as Data, updateTime: jsonUpdateTime)
                 
                 for itemDic in self.itemsDic.prefix(upTo: self.firstDownloadTimes)
                 {
@@ -345,14 +348,20 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
                 }
             } else {
                 self.recreate = false
+                
+                for itemDic in self.itemsDic.prefix(upTo: self.firstDownloadTimes)
+                {
+                    self.createItem(itemDic: itemDic, reCreate: recreate)
+                }
             }
         }
     }
     
-    func updateJsonPlist(newData: Data) {
+    func updateJsonPlist(newData: Data, updateTime: String) {
         if let path = plistPath {
             let plist = NSMutableDictionary(contentsOfFile: path)
             plist?["json"] = newData
+            plist?["updated"] = self.jsonUpdateTime
             plist?.write(toFile: path, atomically: true)
             print("update plist successfully")
         } else {
@@ -361,10 +370,10 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
     }
     
     func readJsonPlist() -> Data? {
-        if let path = plistPath {
-            let plist = NSDictionary(contentsOfFile: path)
+        if let path = plistPath,
+            let plist = NSDictionary(contentsOfFile: path) {
             print("read plist successfully")
-            return plist?["json"] as! Data?
+            return plist["json"] as! Data?
         } else {
             print("read plist error")
             return nil

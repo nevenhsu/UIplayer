@@ -45,14 +45,14 @@
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="App Name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="W7U-pE-AkL">
-                                                    <rect key="frame" x="16" y="102" width="88" height="22"/>
-                                                    <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="18"/>
+                                                    <rect key="frame" x="15.999999999999993" y="98.666666666666686" width="102.33333333333331" height="25.333333333333329"/>
+                                                    <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="21"/>
                                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Catagory" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oDW-DZ-9BS">
-                                                    <rect key="frame" x="16" y="83" width="48" height="15"/>
-                                                    <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="12"/>
+                                                    <rect key="frame" x="16" y="75.666666666666671" width="63" height="19"/>
+                                                    <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="16"/>
                                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
@@ -236,20 +236,17 @@
                                 <gestureRecognizers/>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iYB-yX-Ckh">
-                                <rect key="frame" x="16" y="669" width="220" height="43"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="220" id="nhV-hb-GGp"/>
-                                </constraints>
+                                <rect key="frame" x="16" y="623.33333333333348" width="318" height="56.666666666666629"/>
                                 <string key="text">Showcase and discover the latest work 
 from top online portfolios by creative 
 professionals across industries.</string>
-                                <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="12"/>
+                                <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="16"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="App Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1XV-Hw-jdH">
-                                <rect key="frame" x="16" y="639" width="88" height="22"/>
-                                <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="18"/>
+                                <rect key="frame" x="15.999999999999993" y="590" width="102.33333333333331" height="25.333333333333371"/>
+                                <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="21"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
@@ -277,25 +274,44 @@ professionals across industries.</string>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="center" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Cpi-R0-aYZ">
-                                <rect key="frame" x="0.0" y="64" width="94" height="38"/>
+                                <rect key="frame" x="0.0" y="64" width="44" height="46"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="94" id="uZN-O7-pf5"/>
-                                    <constraint firstAttribute="height" constant="38" id="xpB-6O-t1b"/>
+                                    <constraint firstAttribute="width" constant="44" id="uZN-O7-pf5"/>
+                                    <constraint firstAttribute="height" constant="46" id="xpB-6O-t1b"/>
                                 </constraints>
-                                <state key="normal" image="back"/>
+                                <state key="normal" image="backArrow"/>
                                 <state key="focused" backgroundImage="back"/>
                                 <connections>
                                     <action selector="tappedDoneBtn:" destination="cJd-Jx-SsT" eventType="touchUpInside" id="zid-6L-oII"/>
                                 </connections>
                             </button>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="9bp-8h-4Mp">
+                                <rect key="frame" x="16" y="696" width="318" height="16"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="16" id="Y5V-ty-tYg"/>
+                                </constraints>
+                                <collectionViewLayout key="collectionViewLayout" id="EDS-b0-xzy" customClass="FlowLayout" customModule="UIplayer" customModuleProvider="target"/>
+                                <cells>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="TagCell" id="Z6M-yb-xfV">
+                                        <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                            <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </view>
+                                    </collectionViewCell>
+                                </cells>
+                            </collectionView>
                         </subviews>
                         <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="8Cw-Jk-X2y" firstAttribute="top" secondItem="gOm-o6-idi" secondAttribute="bottom" id="ARG-F6-bN6"/>
+                            <constraint firstItem="8Cw-Jk-X2y" firstAttribute="top" secondItem="9bp-8h-4Mp" secondAttribute="bottom" constant="24" id="DMG-jk-NO7"/>
                             <constraint firstItem="gOm-o6-idi" firstAttribute="leading" secondItem="kMV-uy-icx" secondAttribute="leading" id="ELc-vL-F4X"/>
-                            <constraint firstItem="8Cw-Jk-X2y" firstAttribute="top" secondItem="iYB-yX-Ckh" secondAttribute="bottom" constant="24" id="Jbj-pN-RWx"/>
                             <constraint firstItem="gOm-o6-idi" firstAttribute="top" secondItem="kMV-uy-icx" secondAttribute="top" id="KCp-Ny-LlJ"/>
                             <constraint firstAttribute="trailing" secondItem="3hR-GQ-Fz5" secondAttribute="trailing" constant="8" id="KVp-61-VAC"/>
+                            <constraint firstItem="9bp-8h-4Mp" firstAttribute="leading" secondItem="kMV-uy-icx" secondAttribute="leading" constant="16" id="LNV-WT-Rp5"/>
                             <constraint firstItem="Cpi-R0-aYZ" firstAttribute="top" secondItem="jmj-B3-gLO" secondAttribute="bottom" id="MEU-Ed-mwR"/>
                             <constraint firstItem="Cpi-R0-aYZ" firstAttribute="leading" secondItem="kMV-uy-icx" secondAttribute="leading" id="Nrd-Uv-S8g"/>
                             <constraint firstItem="O22-l5-cBb" firstAttribute="centerY" secondItem="kMV-uy-icx" secondAttribute="centerY" id="Q9E-MD-eyJ"/>
@@ -303,6 +319,9 @@ professionals across industries.</string>
                             <constraint firstItem="iYB-yX-Ckh" firstAttribute="leading" secondItem="kMV-uy-icx" secondAttribute="leading" constant="16" id="bOe-5h-JZj"/>
                             <constraint firstItem="O22-l5-cBb" firstAttribute="centerX" secondItem="kMV-uy-icx" secondAttribute="centerX" id="euU-h2-IfF"/>
                             <constraint firstItem="iYB-yX-Ckh" firstAttribute="top" secondItem="1XV-Hw-jdH" secondAttribute="bottom" constant="8" id="jRr-wh-1ed"/>
+                            <constraint firstItem="9bp-8h-4Mp" firstAttribute="top" secondItem="iYB-yX-Ckh" secondAttribute="bottom" constant="16" id="jgd-D0-6Ar"/>
+                            <constraint firstItem="3hR-GQ-Fz5" firstAttribute="leading" secondItem="9bp-8h-4Mp" secondAttribute="trailing" constant="8" id="lQZ-eQ-lz7"/>
+                            <constraint firstItem="iYB-yX-Ckh" firstAttribute="trailing" secondItem="9bp-8h-4Mp" secondAttribute="trailing" id="nun-du-YaL"/>
                             <constraint firstItem="8Cw-Jk-X2y" firstAttribute="top" secondItem="3hR-GQ-Fz5" secondAttribute="bottom" constant="8" id="rKK-Gs-qg7"/>
                             <constraint firstAttribute="trailing" secondItem="gOm-o6-idi" secondAttribute="trailing" id="sgF-Je-dpn"/>
                         </constraints>
@@ -312,13 +331,15 @@ professionals across industries.</string>
                     </view>
                     <connections>
                         <outlet property="cover" destination="gOm-o6-idi" id="wtb-Ve-am8"/>
+                        <outlet property="flowLayout" destination="EDS-b0-xzy" id="J8A-Oj-col"/>
                         <outlet property="infoLbl" destination="iYB-yX-Ckh" id="q2j-UY-ndP"/>
+                        <outlet property="tagsCollectionView" destination="9bp-8h-4Mp" id="iuS-Su-Ldm"/>
                         <outlet property="titleLbl" destination="1XV-Hw-jdH" id="KKT-ia-qUe"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="diV-j9-tcz" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1672" y="-563"/>
+            <point key="canvasLocation" x="1671.0144927536232" y="-563.31521739130437"/>
         </scene>
         <!--List TableVC-->
         <scene sceneID="i4a-Sb-hp6">
