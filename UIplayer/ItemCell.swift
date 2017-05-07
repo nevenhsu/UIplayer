@@ -15,7 +15,7 @@ class ItemCell: UITableViewCell {
     @IBOutlet weak var thumbnail: UIImageView!
     var viewGradient:CAGradientLayer!
     var color1 = UIColor(white: 0, alpha: 0).cgColor
-    var color2 = UIColor(white: 0, alpha: 0.35).cgColor
+    var color2 = UIColor(white: 0, alpha: 0.5).cgColor
     
     override func awakeFromNib() {
         super.awakeFromNib()

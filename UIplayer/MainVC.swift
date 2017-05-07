@@ -33,8 +33,8 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
     
     private var _itemsDic: [[String: AnyObject]]!
     private var _newIndex: Int!
-    private var _baseURL = URL(string: "http://nevenhsu.ml/")
-    private var _jsonPath: String = "UIplayer/UIplayer.json"
+    private var _baseURL = URL(string: "http://upick.ml/")
+    private var _jsonPath: String = "app/data.json"
     let firstDownloadTimes: Int = 5
     var searching = false
     var isDownloading = false
