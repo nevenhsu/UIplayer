@@ -83,20 +83,20 @@ class DetailVC: UIViewController,AVPlayerViewControllerDelegate, UICollectionVie
         if let url = item.url {
             videoUrl = URL(string: url)
             player = AVPlayer(url: videoUrl!)
-//            videoLayer = AVPlayerLayer(player: player)
-//            videoLayer.frame = self.view.bounds
-//            videoLayer.videoGravity = AVLayerVideoGravityResizeAspectFill
-//            self.cover.layer.addSublayer(videoLayer)
-//            self.player?.play()
+            videoLayer = AVPlayerLayer(player: player)
+            videoLayer.frame = self.view.bounds
+            videoLayer.videoGravity = AVLayerVideoGravityResizeAspectFill
+            self.cover.layer.addSublayer(videoLayer)
+            self.player?.play()
         }
         
-//        observer = self.player?.addPeriodicTimeObserver(forInterval: CMTimeMake(1, 600), queue: DispatchQueue.main) {
-//            [weak self] time in
-//            if self?.player?.currentItem?.status == AVPlayerItemStatus.readyToPlay && self?.player?.currentItem?.isPlaybackLikelyToKeepUp != nil {
-//                self?.playBtn.isHidden = true
-//                self?.replay(player: self?.player, item: self?.player?.currentItem)
-//            }
-//        }
+        observer = self.player?.addPeriodicTimeObserver(forInterval: CMTimeMake(1, 600), queue: DispatchQueue.main) {
+            [weak self] time in
+            if self?.player?.currentItem?.status == AVPlayerItemStatus.readyToPlay && self?.player?.currentItem?.isPlaybackLikelyToKeepUp != nil {
+                self?.playBtn.isHidden = true
+                self?.replay(player: self?.player, item: self?.player?.currentItem)
+            }
+        }
         
         if let title = item.title {
             titleLbl.text = title
@@ -124,8 +124,8 @@ class DetailVC: UIViewController,AVPlayerViewControllerDelegate, UICollectionVie
     
     override func viewDidAppear(_ animated: Bool) {
         navigationController?.navigationBar.layer.isHidden = true
-//        self.player?.pause()
-//        self.player?.play()
+        self.player?.pause()
+        self.player?.play()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -133,28 +133,22 @@ class DetailVC: UIViewController,AVPlayerViewControllerDelegate, UICollectionVie
         navigationItem.hidesBackButton = true
     }
     
-    override func viewDidDisappear(_ animated: Bool) {
-        NotificationCenter.default.removeObserver(self)
-    }
-    
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
     }
     
     @IBAction func playVideoBtn(_ sender: Any) {
-        
-        let player2 = AVPlayer(url: videoUrl!)
+        let player2 = AVPlayer(url: videoUrl)
         playerVC.player = player2
         
         navigationController?.present(playerVC, animated: true, completion: {
-            self.player?.pause()
             player2.play()
             self.replay(player: player2, item: player2.currentItem)
         })
     }
     
     func replay(player: AVPlayer?,item: AVPlayerItem?) {
-        NotificationCenter.default.addObserver(forName: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: item, queue: nil) { (notification) in
+        NotificationCenter.default.addObserver(forName: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: item, queue: nil) { [weak player = player] notification in
             player?.seek(to: kCMTimeZero)
             player?.play()
         }
