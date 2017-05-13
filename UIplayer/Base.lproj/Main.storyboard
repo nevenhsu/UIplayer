@@ -333,6 +333,7 @@ professionals across industries.</string>
                         <outlet property="cover" destination="gOm-o6-idi" id="wtb-Ve-am8"/>
                         <outlet property="flowLayout" destination="EDS-b0-xzy" id="J8A-Oj-col"/>
                         <outlet property="infoLbl" destination="iYB-yX-Ckh" id="q2j-UY-ndP"/>
+                        <outlet property="playBtn" destination="O22-l5-cBb" id="mbk-Ca-X7x"/>
                         <outlet property="tagsCollectionView" destination="9bp-8h-4Mp" id="iuS-Su-Ldm"/>
                         <outlet property="titleLbl" destination="1XV-Hw-jdH" id="KKT-ia-qUe"/>
                     </connections>
@@ -402,10 +403,10 @@ professionals across industries.</string>
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="pGj-OP-GSD" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="black" id="3nw-Sn-lNT">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" barStyle="black" id="3nw-Sn-lNT">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
-                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" red="0.16078431372549018" green="0.082352941176470587" blue="0.29019607843137252" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <color key="barTintColor" red="0.16078431372549018" green="0.082352941176470587" blue="0.29019607843137252" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <textAttributes key="titleTextAttributes">

@@ -39,7 +39,7 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
     var searching = false
     var isDownloading = false
     var recreate = false
-    var _isNetworkConneting: Bool = false
+    private var _isNetworkConneting: Bool = false
 
     var jsonURL : URL {
         get {
@@ -234,10 +234,11 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "DetailVC" {
-            if let detialVC = segue.destination as? DetailVC,
-                let item = sender as? Item
-            {
-                detialVC.item = item
+            if let detialVC = segue.destination as? DetailVC {
+                if let item = sender as? Item {
+                    detialVC.item = item
+                }
+                detialVC.searchBar = self.searchBar
             }
         }
     }

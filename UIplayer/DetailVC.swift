@@ -17,13 +17,18 @@ class DetailVC: UIViewController,AVPlayerViewControllerDelegate, UICollectionVie
     @IBOutlet weak var cover: UIImageView!
     @IBOutlet weak var tagsCollectionView: UICollectionView!
     @IBOutlet weak var flowLayout: FlowLayout!
+    @IBOutlet weak var playBtn: UIButton!
     
     var tags = [String]()
     
     private var _item: Item!
+    var searchBar: SearchBar!
     var sizingCell: TagCell?
+    var observer:Any!
+    var videoLayer :AVPlayerLayer!
     var playerVC: AVPlayerViewController!
     var player: AVPlayer?
+    var _videoUrl: URL!
     var item: Item {
         get {
             if _item != nil {
@@ -37,9 +42,22 @@ class DetailVC: UIViewController,AVPlayerViewControllerDelegate, UICollectionVie
         }
     }
     
+    var videoUrl: URL! {
+        get {
+            if _videoUrl != nil {
+                return _videoUrl
+            } else {
+                return URL(fileURLWithPath: "")
+            }
+        }
+        
+        set {
+            _videoUrl = newValue
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         
         if let tagsData = item.tags {
             for tag in tagsData.allObjects {
@@ -50,7 +68,7 @@ class DetailVC: UIViewController,AVPlayerViewControllerDelegate, UICollectionVie
             }
         }
         
-
+        playBtn.isHidden = false
         
         let cellNib = UINib(nibName: "TagCell", bundle: nil)
         self.tagsCollectionView.register(cellNib, forCellWithReuseIdentifier: "TagCell")
@@ -64,9 +82,23 @@ class DetailVC: UIViewController,AVPlayerViewControllerDelegate, UICollectionVie
         tagsCollectionView.dataSource = self
         
         if let url = item.url {
-            let videoUrl = URL(string: url)
+            videoUrl = URL(string: url)
             player = AVPlayer(url: videoUrl!)
+            videoLayer = AVPlayerLayer(player: player)
+            videoLayer.frame = self.view.bounds
+            videoLayer.videoGravity = AVLayerVideoGravityResizeAspectFill
+            self.cover.layer.addSublayer(videoLayer)
+            self.player?.play()
+            replay(player: self.player, item: player?.currentItem)
         }
+        
+        observer = self.player?.addPeriodicTimeObserver(forInterval: CMTimeMake(1, 600), queue: DispatchQueue.main) {
+            [weak self] time in
+            if self?.player?.currentItem?.status == AVPlayerItemStatus.readyToPlay && self?.player?.currentItem?.isPlaybackLikelyToKeepUp != nil {
+                self?.playBtn.isHidden = true
+            }
+        }
+        
 
         if let title = item.title {
             titleLbl.text = title
@@ -85,7 +117,6 @@ class DetailVC: UIViewController,AVPlayerViewControllerDelegate, UICollectionVie
         } else {
             cover.image = UIImage(named: "background")
         }
-
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -94,6 +125,15 @@ class DetailVC: UIViewController,AVPlayerViewControllerDelegate, UICollectionVie
     
     override func viewDidAppear(_ animated: Bool) {
         navigationController?.navigationBar.layer.isHidden = true
+        self.player?.pause()
+        self.player?.play()
+        replay(player: self.player, item: player?.currentItem)
+        navigationController?.navigationBar.barTintColor = UIColor(red: 41/255, green: 21/255, blue: 74/255, alpha: 1)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        navigationItem.hidesBackButton = true
+        searchBar.barTintColor = UIColor(red: 41/255, green: 21/255, blue: 74/255, alpha: 1)
     }
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
@@ -101,16 +141,21 @@ class DetailVC: UIViewController,AVPlayerViewControllerDelegate, UICollectionVie
     }
     
     @IBAction func playVideoBtn(_ sender: Any) {
-        playerVC.player = player
         
-        navigationController?.present(playerVC, animated: true, completion: { 
-            self.player?.play()
+        let player2 = AVPlayer(url: videoUrl!)
+        playerVC.player = player2
+        
+        navigationController?.present(playerVC, animated: true, completion: {
+            self.player?.pause()
+            player2.play()
+            self.replay(player: player2, item: player2.currentItem)
         })
-
-        
-        NotificationCenter.default.addObserver(forName: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: player?.currentItem, queue: nil) { (notification) in
-            self.player?.seek(to: kCMTimeZero)
-            self.player?.play()
+    }
+    
+    func replay(player: AVPlayer?,item: AVPlayerItem?) {
+        NotificationCenter.default.addObserver(forName: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: item, queue: nil) { (notification) in
+            player?.seek(to: kCMTimeZero)
+            player?.play()
         }
     }
     
