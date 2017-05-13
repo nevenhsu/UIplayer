@@ -154,6 +154,7 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
     override func viewWillAppear(_ animated: Bool) {
         navigationController?.navigationBar.layer.isHidden = false
         navigationController?.navigationBar.layer.opacity = 0
+        searchBar.barTintColor = UIColor(red: 41/255, green: 21/255, blue: 74/255, alpha: 1)
         
         UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseInOut, animations: {
             self.navigationController?.navigationBar.layer.opacity = 1
@@ -227,6 +228,7 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
         if let objs = controller.fetchedObjects, objs.count > 0
         {
             let item = objs[indexPath.row]
+            searchBar.endEditing(true)
             performSegue(withIdentifier: "DetailVC", sender: item)
         }
     }
@@ -234,11 +236,8 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "DetailVC" {
-            if let detialVC = segue.destination as? DetailVC {
-                if let item = sender as? Item {
-                    detialVC.item = item
-                }
-                detialVC.searchBar = self.searchBar
+            if let detialVC = segue.destination as? DetailVC, let item = sender as? Item  {
+                detialVC.item = item
             }
         }
     }

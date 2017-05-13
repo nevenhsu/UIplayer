@@ -22,7 +22,6 @@ class DetailVC: UIViewController,AVPlayerViewControllerDelegate, UICollectionVie
     var tags = [String]()
     
     private var _item: Item!
-    var searchBar: SearchBar!
     var sizingCell: TagCell?
     var observer:Any!
     var videoLayer :AVPlayerLayer!
@@ -84,22 +83,21 @@ class DetailVC: UIViewController,AVPlayerViewControllerDelegate, UICollectionVie
         if let url = item.url {
             videoUrl = URL(string: url)
             player = AVPlayer(url: videoUrl!)
-            videoLayer = AVPlayerLayer(player: player)
-            videoLayer.frame = self.view.bounds
-            videoLayer.videoGravity = AVLayerVideoGravityResizeAspectFill
-            self.cover.layer.addSublayer(videoLayer)
-            self.player?.play()
-            replay(player: self.player, item: player?.currentItem)
+//            videoLayer = AVPlayerLayer(player: player)
+//            videoLayer.frame = self.view.bounds
+//            videoLayer.videoGravity = AVLayerVideoGravityResizeAspectFill
+//            self.cover.layer.addSublayer(videoLayer)
+//            self.player?.play()
         }
         
-        observer = self.player?.addPeriodicTimeObserver(forInterval: CMTimeMake(1, 600), queue: DispatchQueue.main) {
-            [weak self] time in
-            if self?.player?.currentItem?.status == AVPlayerItemStatus.readyToPlay && self?.player?.currentItem?.isPlaybackLikelyToKeepUp != nil {
-                self?.playBtn.isHidden = true
-            }
-        }
+//        observer = self.player?.addPeriodicTimeObserver(forInterval: CMTimeMake(1, 600), queue: DispatchQueue.main) {
+//            [weak self] time in
+//            if self?.player?.currentItem?.status == AVPlayerItemStatus.readyToPlay && self?.player?.currentItem?.isPlaybackLikelyToKeepUp != nil {
+//                self?.playBtn.isHidden = true
+//                self?.replay(player: self?.player, item: self?.player?.currentItem)
+//            }
+//        }
         
-
         if let title = item.title {
             titleLbl.text = title
         } else {
@@ -121,19 +119,22 @@ class DetailVC: UIViewController,AVPlayerViewControllerDelegate, UICollectionVie
     
     override func viewWillAppear(_ animated: Bool) {
         navigationController?.navigationBar.layer.isHidden = true
+        navigationItem.hidesBackButton = false
     }
     
     override func viewDidAppear(_ animated: Bool) {
         navigationController?.navigationBar.layer.isHidden = true
-        self.player?.pause()
-        self.player?.play()
-        replay(player: self.player, item: player?.currentItem)
-        navigationController?.navigationBar.barTintColor = UIColor(red: 41/255, green: 21/255, blue: 74/255, alpha: 1)
+//        self.player?.pause()
+//        self.player?.play()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
+        navigationController?.navigationBar.barTintColor = UIColor(red: 41/255, green: 21/255, blue: 74/255, alpha: 1)
         navigationItem.hidesBackButton = true
-        searchBar.barTintColor = UIColor(red: 41/255, green: 21/255, blue: 74/255, alpha: 1)
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        NotificationCenter.default.removeObserver(self)
     }
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
