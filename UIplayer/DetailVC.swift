@@ -140,12 +140,12 @@ class DetailVC: UIViewController,AVPlayerViewControllerDelegate, UICollectionVie
     }
     
     @IBAction func playVideoBtn(_ sender: Any) {
-        let player2 = AVPlayer(url: videoUrl)
+        let player2 = player
         playerVC.player = player2
         
         navigationController?.present(playerVC, animated: true, completion: {
-            player2.play()
-            self.replay(player: player2, item: player2.currentItem)
+            player2?.play()
+            self.replay(player: player2, item: player2?.currentItem)
         })
     }
     
