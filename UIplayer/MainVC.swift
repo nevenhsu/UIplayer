@@ -669,6 +669,7 @@ class MainVC: UIViewController,UITableViewDelegate,UITableViewDataSource,NSFetch
     func showList() {
         //Add list
         listTableVC.willMove(toParentViewController: self)
+        listTableVC.view.frame.size.height = tableView.frame.height
         tableView.addSubview(listTableVC.view)
         tableView.contentOffset = CGPoint(x: 0, y: 0 - self.tableView.contentInset.top)
         tableView.isScrollEnabled = false

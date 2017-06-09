@@ -80,6 +80,7 @@ class DetailVC: UIViewController,AVPlayerViewControllerDelegate, UICollectionVie
         tagsCollectionView.delegate = self
         tagsCollectionView.dataSource = self
         
+        
         if let url = item.url {
             videoUrl = URL(string: url)
             player = AVPlayer(url: videoUrl!)
@@ -94,9 +95,10 @@ class DetailVC: UIViewController,AVPlayerViewControllerDelegate, UICollectionVie
             [weak self] time in
             if self?.player?.currentItem?.status == AVPlayerItemStatus.readyToPlay && self?.player?.currentItem?.isPlaybackLikelyToKeepUp != nil {
                 self?.playBtn.isHidden = true
-                self?.replay(player: self?.player, item: self?.player?.currentItem)
             }
         }
+        
+        self.replay(player: self.player, item: self.player?.currentItem)
         
         if let title = item.title {
             titleLbl.text = title
@@ -153,6 +155,8 @@ class DetailVC: UIViewController,AVPlayerViewControllerDelegate, UICollectionVie
             player?.play()
         }
     }
+    
+
     
     @IBAction func tappedDoneBtn(_ sender: UIButton) {
         navigationController?.popViewController(animated: true)
@@ -261,6 +265,8 @@ class DetailVC: UIViewController,AVPlayerViewControllerDelegate, UICollectionVie
             return CGSize(width: 0, height: 0)
         }
     }
+    
+
 
 
 }

@@ -16,7 +16,7 @@ protocol ListTableViewControllerDelegate {
 
 class ListTableVC: UITableViewController {
     
-    var listArray = ["Easing","Offset & Delay","Parenting","Transformation","Value change","Masking","Overlay","Cloning","Obscuration","Parallax","Dimensionality","Dolly & Zoom"]
+    var listArray = ["Food","News","Travel","Photo","Social"]
     var delegate: ListTableViewControllerDelegate!
     
     override func viewDidLoad() {
