@@ -10,6 +10,7 @@ import UIKit
 import AVKit
 import AVFoundation
 import Social
+import Lottie
 
 class DetailVC: UIViewController,AVPlayerViewControllerDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     @IBOutlet weak var titleLbl: UILabel!
@@ -68,6 +69,19 @@ class DetailVC: UIViewController,AVPlayerViewControllerDelegate, UICollectionVie
         }
         
         playBtn.isHidden = false
+        
+        // play animation
+        let animationView = LOTAnimationView.init(name: "play")
+        animationView.frame = CGRect(x: 2, y: 2, width: 60, height: 60)
+        animationView.contentMode = .scaleAspectFill
+        animationView.loopAnimation = true
+        animationView.isUserInteractionEnabled = false
+        playBtn.addSubview(animationView)
+        playBtn.bringSubview(toFront: animationView)
+        animationView.play()
+        
+        
+        
         
         let cellNib = UINib(nibName: "TagCell", bundle: nil)
         self.tagsCollectionView.register(cellNib, forCellWithReuseIdentifier: "TagCell")
